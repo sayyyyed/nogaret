@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import ContentCard from '../../components/content/ContentCard.astro';
+import SectionHero from '../../components/content/SectionHero.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { collectionPath } from '../../lib/content/routes';
+import { isPublished, sortByDateDescending } from '../../lib/content/sort';
+
+const entries = sortByDateDescending((await getCollection('research')).filter(isPublished));
+---
+
+<BaseLayout title="Research" description="Research notes, sources, and evolving conclusions.">
+  <SectionHero title="Research" description="Structured research notes with explicit confidence, sources, and open questions." />
+  <section class="grid-list">
+    {entries.map((entry) => (
+      <ContentCard title={entry.data.title} description={entry.data.description} href={collectionPath('research', entry.id)} tags={entry.data.tags} />
+    ))}
+  </section>
+</BaseLayout>

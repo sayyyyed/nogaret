@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import ContentCard from '../../components/content/ContentCard.astro';
+import SectionHero from '../../components/content/SectionHero.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { collectionPath } from '../../lib/content/routes';
+import { isPublished, sortByDateDescending } from '../../lib/content/sort';
+
+const entries = sortByDateDescending((await getCollection('notes')).filter(isPublished));
+---
+
+<BaseLayout title="Notes" description="Digital garden notes, maps of content, and backlinks.">
+  <SectionHero title="Notes" description="Permanent notes, concepts, references, and maps of content for long-term knowledge growth." />
+  <section class="grid-list">
+    {entries.map((entry) => (
+      <ContentCard eyebrow={entry.data.noteType} title={entry.data.title} description={entry.data.description} href={collectionPath('notes', entry.id)} tags={entry.data.tags} />
+    ))}
+  </section>
+</BaseLayout>

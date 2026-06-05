@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import ContentCard from '../../components/content/ContentCard.astro';
+import SectionHero from '../../components/content/SectionHero.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { isPublished } from '../../lib/content/sort';
+
+const entries = (await getCollection('bookmarks')).filter(isPublished);
+---
+
+<BaseLayout title="Bookmarks" description="Saved resources and references.">
+  <SectionHero title="Bookmarks" description="Saved links, references, and useful external resources grouped by topic." />
+  <section class="grid-list">
+    {entries.map((entry) => (
+      <ContentCard title={entry.data.title} description={entry.data.description} href={entry.data.url} tags={entry.data.tags} />
+    ))}
+  </section>
+</BaseLayout>

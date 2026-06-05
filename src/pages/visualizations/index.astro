@@ -1,0 +1,21 @@
+---
+import SectionHero from '../../components/content/SectionHero.astro';
+import VisualizationPlaceholder from '../../components/visualizations/VisualizationPlaceholder.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const ideas = [
+  'Arabic root relationship networks',
+  'Hadith narrator graph exploration',
+  'University statistics dashboards',
+  'Scheduling and resource allocation timelines',
+  'Machine learning concept explainers',
+  'Algorithm demonstrations',
+];
+---
+
+<BaseLayout title="Visualizations" description="Reusable interactive educational visualization architecture.">
+  <SectionHero title="Visualizations" description="Educational visualizations should be implemented as isolated islands so the base site remains fast and content-first." />
+  <section class="grid-list">
+    {ideas.map((idea) => <VisualizationPlaceholder title={idea} description="A planned reusable visualization surface." />)}
+  </section>
+</BaseLayout>

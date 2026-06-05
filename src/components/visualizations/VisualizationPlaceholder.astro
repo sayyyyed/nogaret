@@ -1,0 +1,15 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<section class="viz-placeholder">
+  <p class="eyebrow">Interactive island boundary</p>
+  <h2>{title}</h2>
+  <p>{description}</p>
+  <p>Future implementations should mount D3, Plotly, Three.js, or React Three Fiber only inside this boundary.</p>
+</section>

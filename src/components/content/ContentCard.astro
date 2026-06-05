@@ -1,0 +1,22 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+  eyebrow?: string;
+  tags?: string[];
+}
+
+const { title, description, href, eyebrow, tags = [] } = Astro.props;
+---
+
+<article class="card">
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <h3><a href={href}>{title}</a></h3>
+  <p>{description}</p>
+  {tags.length > 0 && (
+    <ul class="tag-list" aria-label="Tags">
+      {tags.map((tag) => <li>{tag}</li>)}
+    </ul>
+  )}
+</article>

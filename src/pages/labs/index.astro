@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import ContentCard from '../../components/content/ContentCard.astro';
+import SectionHero from '../../components/content/SectionHero.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { collectionPath } from '../../lib/content/routes';
+import { isPublished, sortByDateDescending } from '../../lib/content/sort';
+
+const entries = sortByDateDescending((await getCollection('labs')).filter(isPublished));
+---
+
+<BaseLayout title="Labs" description="Interactive experiments and prototype applications.">
+  <SectionHero title="Labs" description="AI experiments, LLM demos, visualizations, prototype apps, learning tools, and data explorations." />
+  <section class="grid-list">
+    {entries.map((entry) => (
+      <ContentCard eyebrow={entry.data.labType} title={entry.data.title} description={entry.data.description} href={collectionPath('labs', entry.id)} tags={entry.data.technology} />
+    ))}
+  </section>
+</BaseLayout>
