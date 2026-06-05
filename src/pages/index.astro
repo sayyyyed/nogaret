@@ -1,27 +1,16 @@
 ---
-import ContentCard from '../components/content/ContentCard.astro';
-import SectionHero from '../components/content/SectionHero.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-const sections = [
-  ['Blog', 'Long-form technical writing and engineering essays.', '/blog/'],
-  ['Tutorials', 'Practical learning paths with prerequisites and outcomes.', '/tutorials/'],
-  ['Research', 'Research notes, sources, and evolving conclusions.', '/research/'],
-  ['Notes', 'A digital garden of concepts, references, and maps of content.', '/notes/'],
-  ['Projects', 'Portfolio work tracked as content, not hardcoded pages.', '/projects/'],
-  ['Labs', 'Interactive demos, prototypes, and data explorations.', '/labs/'],
-];
 ---
 
-<BaseLayout title="Personal Knowledge Hub">
-  <SectionHero
-    eyebrow="Astro-first knowledge platform"
-    title="A personal knowledge hub for software, AI, education, and research."
-    description="Built for long-form writing, interconnected notes, project logs, and selective interactive learning experiences."
-  />
-  <section class="grid-list" aria-label="Primary sections">
-    {sections.map(([title, description, href]) => (
-      <ContentCard title={title} description={description} href={href} />
-    ))}
+<BaseLayout
+  title="Home"
+  description="Personal website and portfolio for software, research, and writing."
+>
+  <section class="fresh-home" aria-labelledby="home-title">
+    <p class="eyebrow">Personal website and portfolio</p>
+    <h1 id="home-title">Amir</h1>
+    <p>
+      A clean starting point for software projects, research notes, experiments, and long-form writing.
+    </p>
   </section>
 </BaseLayout>

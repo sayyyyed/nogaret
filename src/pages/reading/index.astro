@@ -1,12 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
 import ContentCard from '../../components/content/ContentCard.astro';
 import SectionHero from '../../components/content/SectionHero.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollectionIfNotEmpty } from '../../lib/content/collections';
 import { collectionPath } from '../../lib/content/routes';
 import { isPublished, sortByDateDescending } from '../../lib/content/sort';
 
-const entries = sortByDateDescending((await getCollection('reading')).filter(isPublished));
+const entries = sortByDateDescending((await getCollectionIfNotEmpty('reading')).filter(isPublished));
 ---
 
 <BaseLayout title="Reading List" description="Reading notes and summaries.">

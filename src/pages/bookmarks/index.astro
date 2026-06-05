@@ -1,11 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
 import ContentCard from '../../components/content/ContentCard.astro';
 import SectionHero from '../../components/content/SectionHero.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollectionIfNotEmpty } from '../../lib/content/collections';
 import { isPublished } from '../../lib/content/sort';
 
-const entries = (await getCollection('bookmarks')).filter(isPublished);
+const entries = (await getCollectionIfNotEmpty('bookmarks')).filter(isPublished);
 ---
 
 <BaseLayout title="Bookmarks" description="Saved resources and references.">

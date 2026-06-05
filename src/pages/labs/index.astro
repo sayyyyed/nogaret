@@ -1,12 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
 import ContentCard from '../../components/content/ContentCard.astro';
 import SectionHero from '../../components/content/SectionHero.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollectionIfNotEmpty } from '../../lib/content/collections';
 import { collectionPath } from '../../lib/content/routes';
 import { isPublished, sortByDateDescending } from '../../lib/content/sort';
 
-const entries = sortByDateDescending((await getCollection('labs')).filter(isPublished));
+const entries = sortByDateDescending((await getCollectionIfNotEmpty('labs')).filter(isPublished));
 ---
 
 <BaseLayout title="Labs" description="Interactive experiments and prototype applications.">
