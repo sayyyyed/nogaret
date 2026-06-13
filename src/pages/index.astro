@@ -554,13 +554,15 @@ const hasScrollableExperience = experienceItems.length > 4;
     });
 
     experiencePanels.forEach((panel) => {
-      panel.hidden = panel.getAttribute('data-experience-panel') !== activeId;
+      if (panel instanceof HTMLElement) {
+        panel.hidden = panel.getAttribute('data-experience-panel') !== activeId;
+      }
     });
   };
 
   experienceTabs.forEach((tab, index) => {
     tab.addEventListener('click', () => activateExperience(tab));
-    tab.addEventListener('keydown', (event) => {
+    tab.addEventListener('keydown', (event: KeyboardEvent) => {
       if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(event.key)) return;
 
       event.preventDefault();
@@ -575,7 +577,7 @@ const hasScrollableExperience = experienceItems.length > 4;
     });
   });
 
-  const updateExperienceScrollState = (scrollArea) => {
+  const updateExperienceScrollState = (scrollArea: HTMLElement | Element) => {
     if (!(scrollArea instanceof HTMLElement)) return;
 
     const wrapper = scrollArea.closest('[data-experience-scroll-wrap]');
@@ -598,7 +600,7 @@ const hasScrollableExperience = experienceItems.length > 4;
   });
 
   /* ── Accordion ── */
-  const setAccordionItem = (item, open) => {
+  const setAccordionItem = (item: Element | HTMLElement, open: boolean) => {
     const trigger = item.querySelector('[data-accordion-trigger]');
     const panel = item.querySelector('[data-accordion-panel]');
 
