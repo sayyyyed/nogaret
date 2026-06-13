@@ -1,5 +1,59 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { socialLinks } from '../data/site';
+
+const socialIcons = {
+  github: 'github',
+  linkedin: 'linkedin',
+  behance: 'behance',
+  scholar: 'scholar',
+} as const;
+
+const experienceItems = [
+  {
+    id: 'product-engineer',
+    role: 'Junior Programmer',
+    place: 'Fakultas Hukum Universitas Gadjah Mada',
+    period: 'NOV 2026 - Now',
+    summary:
+      'Bla bla yadda yadda tentang pekerjaan saya: building small product systems, shaping frontend architecture, and keeping messy ideas inspectable.',
+    points: ['Frontend systems', 'Research tooling', 'Content architecture'],
+  },
+  {
+    id: 'freelance',
+    role: 'Graphic Designer',
+    place: 'Self-Employed',
+    period: 'MAR 2024 - OCT 2025',
+    summary:
+      'Bla bla yadda yadda tentang pekerjaan saya: mapping education workflows, cleaning datasets, and turning scattered notes into usable technical artifacts.',
+    points: ['Dataset preparation', 'Learning systems', 'Technical writing'],
+  },
+  {
+    id: 'research-assistant',
+    role: 'Full Stack Developer',
+    place: 'PT. Haebot Teknologi Indonesia',
+    period: 'DEC 2024 - FEB 2025',
+    summary:
+      'Bla bla yadda yadda tentang pekerjaan saya: mapping education workflows, cleaning datasets, and turning scattered notes into usable technical artifacts.',
+    points: ['Dataset preparation', 'Learning systems', 'Technical writing'],
+  },
+  {
+    id: 'software-lab',
+    role: 'Frontend Developer',
+    place: 'PT. Dkenzie Wastu Baswara',
+    period: 'APR 2024 - JUL 2024',
+    summary:
+      'Bla bla yadda yadda tentang pekerjaan saya: prototypes, dashboards, language tools, and small experiments that test whether an idea deserves more time.',
+    points: ['Rapid prototypes', 'Dashboards', 'Language technology'],
+  },
+];
+
+const education = {
+  school: 'UIN Malang',
+  period: '2021-2025',
+  gpa: 'GPA 3.86',
+  thesis: 'X',
+};
 ---
 
 <BaseLayout
@@ -7,10 +61,280 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   description="Personal website and portfolio for software, research, and writing."
 >
   <section class="fresh-home" aria-labelledby="home-title">
-    <p class="eyebrow">Personal website and portfolio</p>
-    <h1 id="home-title">Amir</h1>
-    <p>
-      A clean starting point for software projects, research notes, experiments, and long-form writing.
-    </p>
+    <div class="home-copy">
+      <h1 id="home-title">Sayyed Aamir</h1>
+      <p class="home-subtitle">
+        Software and stuff.
+      </p>
+      <p class="home-location">Sleman, DIY</p>
+      <div class="home-actions" aria-label="Primary actions">
+        <a class="button-primary" href="/projects/">Browse projects</a>
+        <a class="button-secondary" href="/blog/">Read writing</a>
+      </div>
+      <div class="mt-4 flex flex-wrap items-center gap-2 border-y border-[var(--hairline-soft)] py-3" aria-label="Profile links">
+        {socialLinks.map((link) => (
+          <a
+            class={`group relative grid size-11 place-items-center rounded-full border border-[var(--hairline-soft)] text-[var(--ash)] transition-[background-color,border-color,color,transform] duration-500 ease-[var(--motion)] hover:-translate-y-0.5 hover:border-[var(--hairline)] hover:bg-[var(--surface-card)] focus-visible:-translate-y-0.5 focus-visible:border-[var(--hairline)] focus-visible:bg-[var(--surface-card)] ${link.platform}-logo`}
+            href={link.href}
+            aria-label={link.label}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <span class="pointer-events-none absolute bottom-[calc(100%+0.45rem)] left-1/2 z-10 -translate-x-1/2 translate-y-1 rounded-full bg-[var(--ink)] px-2.5 py-1.5 text-xs font-bold leading-none text-white opacity-0 transition-[opacity,transform] duration-500 ease-[var(--motion)] group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+              {link.label}
+            </span>
+            <span class="grid size-6 place-items-center" aria-hidden="true">
+              {socialIcons[link.platform] === 'github' && (
+                <svg class="size-[21px] fill-current" viewBox="0 0 24 24">
+                  <path d="M12 0C5.37 0 0 5.5 0 12.29c0 5.43 3.44 10.03 8.2 11.66.6.11.82-.27.82-.59 0-.29-.01-1.06-.02-2.08-3.34.74-4.04-1.65-4.04-1.65-.55-1.42-1.33-1.8-1.33-1.8-1.09-.76.08-.75.08-.75 1.2.09 1.84 1.27 1.84 1.27 1.07 1.88 2.81 1.34 3.5 1.02.11-.79.42-1.34.76-1.64-2.66-.31-5.47-1.36-5.47-6.08 0-1.34.47-2.44 1.24-3.3-.12-.31-.54-1.56.12-3.25 0 0 1.01-.33 3.3 1.26a11.23 11.23 0 0 1 6 0c2.29-1.59 3.3-1.26 3.3-1.26.66 1.69.24 2.94.12 3.25.77.86 1.24 1.96 1.24 3.3 0 4.73-2.81 5.76-5.49 6.07.43.38.82 1.13.82 2.28 0 1.64-.02 2.97-.02 3.37 0 .33.22.71.83.59C20.56 22.32 24 17.72 24 12.29 24 5.5 18.63 0 12 0Z" />
+                </svg>
+              )}
+              {socialIcons[link.platform] === 'linkedin' && (
+                <svg class="size-[19px] fill-current" viewBox="0 0 24 24">
+                  <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.95v5.66H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.61 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13Zm1.78 13.02H3.56V9h3.56v11.45ZM22.23 0H1.77C.8 0 0 .77 0 1.73v20.54C0 23.23.8 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.73V1.73C24 .77 23.2 0 22.23 0Z" />
+                </svg>
+              )}
+              {socialIcons[link.platform] === 'behance' && (
+                <svg class="size-5 fill-current" viewBox="0 0 24 24">
+                  <path d="M9.28 11.2s2.69-.2 2.69-3.35c0-3.15-2.2-4.69-4.98-4.69H0v17.6h6.99s5.59.18 5.59-5.2c0 0 .24-4.36-3.3-4.36ZM3.08 6.29h3.91s1.24 0 1.24 1.83c0 1.83-.73 2.1-1.56 2.1H3.08V6.29Zm3.7 11.35h-3.7v-4.7h3.91s1.85-.02 1.85 2.42c0 2.06-1.34 2.27-2.06 2.28ZM19.43 7.64c-6.2 0-6.19 6.57-6.19 6.57s-.42 6.55 6.19 6.55c0 0 5.51.33 5.51-4.56h-2.83s.09 1.88-2.58 1.88c0 0-2.83.19-2.83-2.97h8.34s.91-7.47-5.61-7.47Zm-2.76 5.17s.35-2.7 2.83-2.7 2.45 2.7 2.45 2.7h-5.28ZM22.46 4.13h-6.62v1.97h6.62V4.13Z" />
+                </svg>
+              )}
+              {socialIcons[link.platform] === 'scholar' && (
+                <svg class="size-[21px] translate-y-px fill-current" viewBox="0 0 24 24">
+                  <path d="M12 24a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm0-3.03a3.97 3.97 0 1 1 0-7.94 3.97 3.97 0 0 1 0 7.94Z" />
+                  <path d="M12 0 1.63 8.13 12 16.26l10.37-8.13L12 0Z" />
+                </svg>
+              )}
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+    <div class="home-board" aria-label="Site highlights">
+      <article class="home-note home-note-large">
+        <span>01</span>
+        <h2>Software</h2>
+        <p>Systems, architecture notes, and project write-ups shaped for repeat reading.</p>
+      </article>
+      <article class="home-note">
+        <span>02</span>
+        <h2>Research</h2>
+        <p>AI, education, language, and long-form investigation logs.</p>
+      </article>
+      <article class="home-note mascot-note">
+        <span>03</span>
+        <svg viewBox="0 0 120 90" aria-hidden="true">
+          <path d="M18 56c0-24 20-42 49-42 23 0 39 14 39 34 0 21-17 33-43 33H27c-6 0-9-4-9-10V56Z" fill="#f7a501" />
+          <path d="m36 20-9-16m23 12-1-15m26 17 12-13" stroke="#23251d" stroke-linecap="round" stroke-width="7" />
+          <path d="M30 66c10-17 15-22 20-13 5 3 17-12 21-7 2 3-3 10-3 13 11-5 18-14 30-22" fill="none" stroke="#23251d" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" />
+        </svg>
+      </article>
+    </div>
+  </section>
+
+  <section class="py-20 md:py-24" aria-labelledby="experience-title">
+    <div class="mb-6 max-w-2xl">
+      <p class="eyebrow">Work notes</p>
+      <h2 id="experience-title" class="m-0 text-2xl font-extrabold leading-tight tracking-normal text-[var(--ink)] md:text-3xl">
+        Experience
+      </h2>
+    </div>
+
+    <div class="experience-desktop-grid grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
+      <aside class="doc-sidebar-panel" aria-label="Experience navigation">
+        <div class="flex gap-2 overflow-x-auto pb-1 lg:grid lg:overflow-visible lg:pb-0" role="tablist" aria-orientation="vertical">
+          {experienceItems.map((item, index) => (
+            <button
+              class="experience-tab min-w-[210px] rounded-md border border-[var(--hairline)] bg-gray-50 p-3 text-left text-sm transition-[background-color,border-color,color,transform] duration-500 ease-[var(--motion)] hover:-translate-y-0.5 hover:bg-white focus-visible:-translate-y-0.5 lg:min-w-0"
+              type="button"
+              role="tab"
+              id={`tab-${item.id}`}
+              aria-controls={`panel-${item.id}`}
+              aria-selected={index === 0 ? 'true' : 'false'}
+              tabindex={index === 0 ? '0' : '-1'}
+              data-experience-tab={item.id}
+            >
+              <span class="block text-xs font-bold uppercase leading-tight text-[var(--mute)]">{item.period}</span>
+              <span class="mt-1 block font-bold leading-snug text-[var(--ink)]">{item.role}</span>
+              <span class="mt-0.5 block text-xs leading-snug text-[var(--body)]">{item.place}</span>
+            </button>
+          ))}
+        </div>
+      </aside>
+
+      <div class="doc-experience-card">
+        {experienceItems.map((item, index) => (
+          <article
+            class="experience-panel"
+            id={`panel-${item.id}`}
+            role="tabpanel"
+            aria-labelledby={`tab-${item.id}`}
+            hidden={index !== 0}
+            data-experience-panel={item.id}
+          >
+            <p class="eyebrow">{item.period}</p>
+            <h3 class="m-0 text-2xl font-extrabold leading-tight text-[var(--ink)]">{item.role}</h3>
+            <p class="m-0 mt-1 text-sm font-semibold text-[var(--mute)]">{item.place}</p>
+            <p class="mt-5 max-w-3xl text-[15px] leading-[1.71] text-[var(--body)]">{item.summary}</p>
+            <div class="mt-5 rounded-md bg-[var(--surface-dark)] p-4 font-mono text-sm leading-relaxed text-white">
+              <span class="text-[var(--primary)]">work.note</span> = [
+              {item.points.map((point) => (
+                <span class="block pl-4">"{point}",</span>
+              ))}
+              ]
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <div class="experience-accordion" data-experience-accordion>
+      {experienceItems.map((item, index) => (
+        <article class="experience-accordion-item" data-accordion-item>
+          <button
+            class="experience-accordion-trigger"
+            type="button"
+            id={`accordion-trigger-${item.id}`}
+            aria-expanded={index === 0 ? 'true' : 'false'}
+            aria-controls={`accordion-panel-${item.id}`}
+            data-accordion-trigger
+          >
+            <span class="experience-accordion-meta">{item.period}</span>
+            <span class="experience-accordion-title">{item.role}</span>
+            <span class="experience-accordion-place">{item.place}</span>
+            <span class="experience-accordion-icon" aria-hidden="true"></span>
+          </button>
+          <div
+            class="experience-accordion-panel"
+            id={`accordion-panel-${item.id}`}
+            role="region"
+            aria-labelledby={`accordion-trigger-${item.id}`}
+            data-accordion-panel
+          >
+            <div class="experience-accordion-content">
+              <p>{item.summary}</p>
+              <div class="experience-code-block">
+                <span>work.note</span> = [
+                {item.points.map((point) => (
+                  <span class="block pl-4">"{point}",</span>
+                ))}
+                ]
+              </div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="pb-20 md:pb-24" aria-labelledby="education-title">
+    <div class="mb-6 max-w-2xl">
+      <p class="eyebrow">Study log</p>
+      <h2 id="education-title" class="m-0 text-2xl font-extrabold leading-tight tracking-normal text-[var(--ink)] md:text-3xl">
+        Education
+      </h2>
+    </div>
+    <div class="max-w-3xl text-[var(--body)]">
+      <h3 class="m-0 text-xl font-extrabold leading-tight text-[var(--ink)]">{education.school}</h3>
+      <p class="m-0 mt-1 text-sm leading-[1.71] text-[var(--mute)]">
+        {education.period} / {education.gpa}
+      </p>
+      <p class="m-0 mt-3 text-[15px] leading-[1.71]">
+        Skripsi: {education.thesis}
+      </p>
+    </div>
   </section>
 </BaseLayout>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const experienceTabs = Array.from(document.querySelectorAll('[data-experience-tab]'));
+  const experiencePanels = Array.from(document.querySelectorAll('[data-experience-panel]'));
+  const accordionItems = Array.from(document.querySelectorAll('[data-accordion-item]'));
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const activateExperience = (activeTab) => {
+    const activeId = activeTab.getAttribute('data-experience-tab');
+
+    experienceTabs.forEach((tab) => {
+      const selected = tab === activeTab;
+      tab.setAttribute('aria-selected', String(selected));
+      tab.setAttribute('tabindex', selected ? '0' : '-1');
+    });
+
+    experiencePanels.forEach((panel) => {
+      panel.hidden = panel.getAttribute('data-experience-panel') !== activeId;
+    });
+  };
+
+  experienceTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => activateExperience(tab));
+    tab.addEventListener('keydown', (event) => {
+      if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(event.key)) return;
+
+      event.preventDefault();
+      const direction = event.key === 'ArrowDown' || event.key === 'ArrowRight' ? 1 : -1;
+      const nextIndex = (index + direction + experienceTabs.length) % experienceTabs.length;
+      const nextTab = experienceTabs[nextIndex];
+
+      if (nextTab instanceof HTMLElement) {
+        nextTab.focus();
+        activateExperience(nextTab);
+      }
+    });
+  });
+
+  const setAccordionItem = (item, open) => {
+    const trigger = item.querySelector('[data-accordion-trigger]');
+    const panel = item.querySelector('[data-accordion-panel]');
+
+    if (!(trigger instanceof HTMLButtonElement) || !(panel instanceof HTMLElement)) return;
+
+    trigger.setAttribute('aria-expanded', String(open));
+    item.setAttribute('data-open', String(open));
+
+    if (motionQuery.matches) {
+      panel.style.height = open ? 'auto' : '0px';
+      panel.style.opacity = open ? '1' : '0';
+      return;
+    }
+
+    gsap.killTweensOf(panel);
+
+    if (open) {
+      panel.style.height = 'auto';
+      const targetHeight = panel.offsetHeight;
+      panel.style.height = '0px';
+      gsap.to(panel, {
+        duration: 0.44,
+        ease: 'power4.out',
+        height: targetHeight,
+        opacity: 1,
+        onComplete: () => {
+          panel.style.height = 'auto';
+        },
+      });
+      return;
+    }
+
+    gsap.to(panel, {
+      duration: 0.32,
+      ease: 'power3.inOut',
+      height: 0,
+      opacity: 0,
+    });
+  };
+
+  accordionItems.forEach((item, index) => {
+    setAccordionItem(item, index === 0);
+
+    const trigger = item.querySelector('[data-accordion-trigger]');
+    if (!(trigger instanceof HTMLButtonElement)) return;
+
+    trigger.addEventListener('click', () => {
+      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+      accordionItems.forEach((accordionItem) => setAccordionItem(accordionItem, accordionItem === item ? !isOpen : false));
+    });
+  });
+</script>
