@@ -607,6 +607,10 @@ main {
   line-height: 1.43;
 }
 
+.experience-sidebar-scroll {
+  position: relative;
+}
+
 .experience-tab[aria-selected="true"] {
   background: var(--primary);
   border-color: color-mix(in srgb, var(--primary), var(--ink) 18%);
@@ -808,6 +812,74 @@ main {
   }
 }
 
+@media (min-width: 1024px) {
+  .experience-sidebar-scroll.is-scrollable {
+    padding-block: 1.35rem;
+  }
+
+  .experience-scroll-arrow {
+    align-items: center;
+    background: var(--surface-card);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 999px;
+    color: var(--ink);
+    display: flex;
+    font-size: 13px;
+    font-weight: 800;
+    height: 30px;
+    justify-content: center;
+    left: 50%;
+    line-height: 1;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    transform: translateX(-50%) scale(0.92);
+    transition:
+      opacity 260ms var(--motion),
+      transform 260ms var(--motion);
+    width: 30px;
+    z-index: 2;
+  }
+
+  .experience-scroll-arrow-up {
+    top: 0;
+  }
+
+  .experience-scroll-arrow-down {
+    bottom: 0;
+  }
+
+  .experience-sidebar-scroll[data-scroll-state="top"] .experience-scroll-arrow-down,
+  .experience-sidebar-scroll[data-scroll-state="bottom"] .experience-scroll-arrow-up,
+  .experience-sidebar-scroll[data-scroll-state="middle"] .experience-scroll-arrow-up,
+  .experience-sidebar-scroll[data-scroll-state="middle"] .experience-scroll-arrow-down {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+
+  .experience-sidebar-scroll.is-scrollable .experience-tab-list {
+    max-height: 388px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 0.45rem;
+    scrollbar-color: var(--hairline) transparent;
+    scrollbar-width: thin;
+  }
+
+  .experience-sidebar-scroll.is-scrollable .experience-tab-list::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  .experience-sidebar-scroll.is-scrollable .experience-tab-list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .experience-sidebar-scroll.is-scrollable .experience-tab-list::-webkit-scrollbar-thumb {
+    background: var(--hairline);
+    border-radius: 999px;
+  }
+}
+
 @media (max-width: 768px) {
   .site-header {
     min-height: 64px;
@@ -824,6 +896,32 @@ main {
     width: 100%;
   }
 
+  .nav-shell::after {
+    background:
+      linear-gradient(var(--ink), var(--ink)) center 15px / 16px 2px no-repeat,
+      linear-gradient(var(--ink), var(--ink)) center 23px / 16px 2px no-repeat,
+      var(--surface-soft);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 999px;
+    content: "";
+    display: block;
+    flex: 0 0 40px;
+    height: 40px;
+    margin-left: auto;
+    pointer-events: none;
+    transition:
+      background-color 420ms var(--motion),
+      opacity 420ms var(--motion),
+      transform 420ms var(--motion);
+    width: 40px;
+    z-index: 7;
+  }
+
+  .nav-shell:has(.nav-toggle[aria-expanded="true"])::after {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+
   .brand {
     margin-right: auto;
   }
@@ -832,11 +930,16 @@ main {
     display: none;
   }
 
+  .nav-actions {
+    display: none;
+  }
+
   .nav-toggle {
     flex: 0 0 40px;
     background: var(--surface-soft);
     border-color: var(--hairline-soft);
     display: inline-flex !important;
+    margin-left: 0;
     opacity: 1 !important;
     position: absolute;
     right: 1rem;
@@ -846,6 +949,23 @@ main {
     z-index: 8;
   }
 
+  .nav-toggle::before {
+    background:
+      linear-gradient(var(--ink), var(--ink)) center 0 / 16px 2px no-repeat,
+      linear-gradient(var(--ink), var(--ink)) center 8px / 16px 2px no-repeat;
+    content: "";
+    display: block;
+    height: 10px;
+    transition:
+      opacity 320ms var(--motion),
+      transform 420ms var(--motion);
+    width: 18px;
+  }
+
+  .nav-toggle span {
+    opacity: 0;
+  }
+
   .nav-toggle:hover,
   .nav-toggle:focus-visible {
     transform: translateY(-50%) translateY(-1px);
@@ -853,6 +973,15 @@ main {
 
   .nav-toggle:active {
     transform: translateY(-50%) scale(0.96);
+  }
+
+  .nav-toggle.is-open span {
+    opacity: 1;
+  }
+
+  .nav-toggle.is-open::before {
+    opacity: 0;
+    transform: scale(0.85);
   }
 
   .mobile-menu {

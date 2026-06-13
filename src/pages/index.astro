@@ -46,14 +46,35 @@ const experienceItems = [
       'Bla bla yadda yadda tentang pekerjaan saya: prototypes, dashboards, language tools, and small experiments that test whether an idea deserves more time.',
     points: ['Rapid prototypes', 'Dashboards', 'Language technology'],
   },
+    {
+    id: 'desain',
+    role: 'Graphic Designer',
+    place: 'LTN NU Kota Blitar',
+    period: 'JUL 2021 - NOW',
+    summary:
+      'Bla bla yadda yadda tentang pekerjaan saya: prototypes, dashboards, language tools, and small experiments that test whether an idea deserves more time.',
+    points: ['Rapid prototypes', 'Dashboards', 'Language technology'],
+  }
+  ,
+    {
+    id: 'pilot',
+    role: 'Graphic Designer',
+    place: 'Team Selawe - Media Pondok Induk',
+    period: 'OCT 2019 - MAY 2021',
+    summary:
+      'Bla bla yadda yadda tentang pekerjaan saya: prototypes, dashboards, language tools, and small experiments that test whether an idea deserves more time.',
+    points: ['Rapid prototypes', 'Dashboards', 'Language technology'],
+  },
 ];
 
 const education = {
   school: 'UIN Malang',
   period: '2021-2025',
   gpa: 'GPA 3.86',
-  thesis: 'X',
+  thesis: 'Text Summarization Umpan Balik Pengguna Website SiBayar dengan metode Bidirectional Long Short-Term Memory (BiLSTM)',
 };
+
+const hasScrollableExperience = experienceItems.length > 4;
 ---
 
 <BaseLayout
@@ -63,10 +84,12 @@ const education = {
   <section class="fresh-home" aria-labelledby="home-title">
     <div class="home-copy">
       <h1 id="home-title">Sayyed Aamir</h1>
-      <p class="home-subtitle">
-        Software and stuff.
+      <p class="home-subtitle text-md">
+        Software and stuff. 
+        <br>
+        <span class="text-sm">Sleman, Yogyakarta</span>
       </p>
-      <p class="home-location">Sleman, DIY</p>
+      
       <div class="home-actions" aria-label="Primary actions">
         <a class="button-primary" href="/projects/">Browse projects</a>
         <a class="button-secondary" href="/blog/">Read writing</a>
@@ -142,23 +165,31 @@ const education = {
 
     <div class="experience-desktop-grid grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
       <aside class="doc-sidebar-panel" aria-label="Experience navigation">
-        <div class="flex gap-2 overflow-x-auto pb-1 lg:grid lg:overflow-visible lg:pb-0" role="tablist" aria-orientation="vertical">
-          {experienceItems.map((item, index) => (
-            <button
-              class="experience-tab min-w-[210px] rounded-md border border-[var(--hairline)] bg-gray-50 p-3 text-left text-sm transition-[background-color,border-color,color,transform] duration-500 ease-[var(--motion)] hover:-translate-y-0.5 hover:bg-white focus-visible:-translate-y-0.5 lg:min-w-0"
-              type="button"
-              role="tab"
-              id={`tab-${item.id}`}
-              aria-controls={`panel-${item.id}`}
-              aria-selected={index === 0 ? 'true' : 'false'}
-              tabindex={index === 0 ? '0' : '-1'}
-              data-experience-tab={item.id}
-            >
-              <span class="block text-xs font-bold uppercase leading-tight text-[var(--mute)]">{item.period}</span>
-              <span class="mt-1 block font-bold leading-snug text-[var(--ink)]">{item.role}</span>
-              <span class="mt-0.5 block text-xs leading-snug text-[var(--body)]">{item.place}</span>
-            </button>
-          ))}
+        <div class={`experience-sidebar-scroll ${hasScrollableExperience ? 'is-scrollable' : ''}`} data-experience-scroll-wrap>
+          {hasScrollableExperience && (
+            <span class="experience-scroll-arrow experience-scroll-arrow-up" aria-hidden="true" data-experience-scroll-up>↑</span>
+          )}
+          <div class="experience-tab-list flex gap-2 overflow-x-auto pb-1 lg:grid lg:overflow-visible lg:pb-0" role="tablist" aria-orientation="vertical" data-experience-scroll>
+            {experienceItems.map((item, index) => (
+              <button
+                class="experience-tab min-w-[210px] rounded-md border border-[var(--hairline)] bg-gray-50 p-3 text-left text-sm transition-[background-color,border-color,color,transform] duration-500 ease-[var(--motion)] hover:-translate-y-0.5 hover:bg-white focus-visible:-translate-y-0.5 lg:min-w-0"
+                type="button"
+                role="tab"
+                id={`tab-${item.id}`}
+                aria-controls={`panel-${item.id}`}
+                aria-selected={index === 0 ? 'true' : 'false'}
+                tabindex={index === 0 ? '0' : '-1'}
+                data-experience-tab={item.id}
+              >
+                <span class="block text-xs font-bold uppercase leading-tight text-[var(--mute)]">{item.period}</span>
+                <span class="mt-1 block font-bold leading-snug text-[var(--ink)]">{item.role}</span>
+                <span class="mt-0.5 block text-xs leading-snug text-[var(--body)]">{item.place}</span>
+              </button>
+            ))}
+          </div>
+          {hasScrollableExperience && (
+            <span class="experience-scroll-arrow experience-scroll-arrow-down" aria-hidden="true" data-experience-scroll-down>↓</span>
+          )}
         </div>
       </aside>
 
@@ -251,6 +282,7 @@ const education = {
 
   const experienceTabs = Array.from(document.querySelectorAll('[data-experience-tab]'));
   const experiencePanels = Array.from(document.querySelectorAll('[data-experience-panel]'));
+  const experienceScrollAreas = Array.from(document.querySelectorAll('[data-experience-scroll]'));
   const accordionItems = Array.from(document.querySelectorAll('[data-accordion-item]'));
   const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -283,6 +315,28 @@ const education = {
         activateExperience(nextTab);
       }
     });
+  });
+
+  const updateExperienceScrollState = (scrollArea) => {
+    if (!(scrollArea instanceof HTMLElement)) return;
+
+    const wrapper = scrollArea.closest('[data-experience-scroll-wrap]');
+    if (!(wrapper instanceof HTMLElement)) return;
+
+    const maxScroll = scrollArea.scrollHeight - scrollArea.clientHeight;
+    const hasOverflow = maxScroll > 1;
+    const isAtTop = scrollArea.scrollTop <= 1;
+    const isAtBottom = scrollArea.scrollTop >= maxScroll - 1;
+
+    wrapper.dataset.scrollState = !hasOverflow ? 'none' : isAtTop ? 'top' : isAtBottom ? 'bottom' : 'middle';
+  };
+
+  experienceScrollAreas.forEach((scrollArea) => {
+    if (!(scrollArea instanceof HTMLElement)) return;
+
+    updateExperienceScrollState(scrollArea);
+    scrollArea.addEventListener('scroll', () => updateExperienceScrollState(scrollArea), { passive: true });
+    window.addEventListener('resize', () => updateExperienceScrollState(scrollArea));
   });
 
   const setAccordionItem = (item, open) => {
