@@ -1,5 +1,5 @@
 ---
-import { primaryNavigation, secondaryNavigation, site } from '../data/site';
+import { primaryNavigation, site } from '../data/site';
 import '../styles/global.css';
 
 interface Props {
@@ -60,13 +60,11 @@ const pageTitle = title === site.name ? site.name : `${title} | ${site.name}`;
       <slot />
     </main>
     <footer class="site-footer">
-      <div>
-        <strong>{site.name}</strong>
-        <p>{site.description}</p>
+      <div class="footer-info">
+        <p class="footer-description">{site.description}</p>
+        <a class="footer-email" href="mailto:aamirhassansayyed@gmail.com">aamirhassansayyed@gmail.com</a>
       </div>
-      <nav class="footer-links" aria-label="Secondary navigation">
-        {secondaryNavigation.map((item) => <a href={item.href}>{item.label}</a>)}
-      </nav>
+      <p class="footer-copy">&copy; {new Date().getFullYear()}</p>
     </footer>
     <script>
       import { gsap } from 'gsap';

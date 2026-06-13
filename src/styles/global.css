@@ -1204,3 +1204,590 @@ main {
     transition-duration: 1ms !important;
   }
 }
+
+/* ==========================================================================
+   Marquee Interstitial
+   ========================================================================== */
+
+.interstitial-marquee {
+  /* Break out of main container */
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  /* Edge blur */
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  
+  background: var(--surface-soft);
+  border-bottom: 1px solid var(--hairline);
+  border-top: 1px solid var(--hairline);
+  padding: 1rem 0;
+  overflow: hidden;
+  position: relative;
+  margin-top: 5rem;
+}
+
+.marquee-track {
+  display: flex;
+  white-space: nowrap;
+}
+
+.marquee-content {
+  display: flex;
+  padding-right: 2rem;
+  will-change: transform;
+}
+
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: "IBM Plex Sans", "IBM Plex Sans Variable", -apple-system, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-right: 3rem;
+  color: var(--ink);
+}
+
+.currency-pair {
+  color: var(--mute);
+  font-weight: 700;
+}
+
+.currency-rate {
+  font-variant-numeric: tabular-nums;
+}
+
+.currency-diff {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+
+.diff-up {
+  color: var(--accent-green);
+  background: var(--accent-green-soft);
+}
+
+.diff-down {
+  color: var(--accent-red);
+  background: var(--accent-red-soft);
+}
+
+@media (max-width: 768px) {
+  .marquee-item {
+    font-size: 1rem;
+    margin-right: 2rem;
+  }
+}
+
+/* ==========================================================================
+   Education Thesis Link
+   ========================================================================== */
+
+.thesis-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  color: var(--link-teal);
+  text-decoration: none;
+  font-size: 15px;
+  line-height: 1.71;
+  font-weight: 600;
+  position: relative;
+}
+
+.thesis-link-text {
+  border-bottom: 1px solid transparent;
+  transition: border-color 300ms var(--motion);
+}
+
+.thesis-link:hover .thesis-link-text {
+  border-color: currentColor;
+}
+
+.thesis-link-arrow {
+  display: inline-block;
+  transition: transform 300ms var(--motion);
+}
+
+.thesis-link:hover .thesis-link-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* Tooltip (CSS only for now) */
+.thesis-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  width: max-content;
+  max-width: 300px;
+  background: var(--ink);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 500;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 300ms var(--motion), transform 300ms var(--motion), visibility 300ms;
+  z-index: 20;
+  text-wrap: pretty;
+  box-shadow: 0 10px 25px rgba(35, 37, 29, 0.2);
+}
+
+.thesis-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: var(--ink) transparent transparent transparent;
+}
+
+.thesis-link:hover .thesis-tooltip,
+.thesis-link:focus-visible .thesis-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 768px) {
+  .thesis-tooltip {
+    left: 0;
+    transform: translateX(0) translateY(4px);
+  }
+  .thesis-tooltip::after {
+    left: 20px;
+  }
+  .thesis-link:hover .thesis-tooltip,
+  .thesis-link:focus-visible .thesis-tooltip {
+    transform: translateX(0) translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Contact Hero & WYSIWYG
+   ========================================================================== */
+
+.contact-hero {
+  /* Break out of main container */
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  
+  background: var(--surface-dark);
+  color: white;
+  padding: 3.5rem 1.5rem;
+  margin-top: 5rem;
+  overflow: hidden;
+}
+
+.contact-hero-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.contact-eyebrow {
+  color: var(--ash);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.contact-hero-title {
+  color: white;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin: 0 0 0.5rem;
+  line-height: 1.1;
+}
+
+.contact-hero-email {
+  margin: 0;
+}
+
+.contact-hero-email a {
+  color: var(--primary);
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.contact-hero-email a:hover {
+  text-decoration: underline;
+  color: var(--primary-pressed);
+}
+
+/* Composer Shell */
+.composer-shell {
+  margin-top: 3rem;
+  background: white;
+  border-radius: 8px;
+  color: var(--ink);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+
+.composer-window {
+  display: flex;
+  flex-direction: column;
+}
+
+.composer-chrome {
+  background: var(--surface-soft);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--hairline-soft);
+}
+
+.composer-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.composer-dot-red { background: #ff5f56; }
+.composer-dot-yellow { background: #ffbd2e; }
+.composer-dot-green { background: #27c93f; }
+
+.composer-chrome-title {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mute);
+  transform: translateX(-24px);
+}
+
+.composer-fields {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--hairline-soft);
+}
+
+.composer-field {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--hairline-soft);
+  padding: 0 1rem;
+}
+
+.composer-field:last-child {
+  border-bottom: none;
+}
+
+.composer-field-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--mute);
+  width: 60px;
+}
+
+.composer-field-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.75rem 0;
+  font-size: 15px;
+  color: var(--ink);
+  outline: none;
+  font-family: inherit;
+}
+
+.composer-field-input:focus {
+  outline: none;
+}
+
+.composer-field-input::placeholder {
+  color: var(--ash);
+}
+
+.composer-toolbar {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--hairline-soft);
+  background: var(--surface-doc);
+}
+
+.composer-toolbar-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mute);
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.composer-toolbar-btn:hover {
+  background: var(--surface-soft);
+  color: var(--ink);
+}
+
+.composer-body {
+  min-height: 200px;
+  padding: 1rem;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+  outline: none;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.composer-body:empty::before {
+  content: attr(data-placeholder);
+  color: var(--ash);
+  pointer-events: none;
+}
+
+.composer-body a {
+  color: var(--link-teal);
+  text-decoration: underline;
+}
+
+.composer-body ul {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.composer-body li {
+  margin-bottom: 0.25rem;
+}
+
+.composer-footer {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--hairline-soft);
+  background: var(--surface-doc);
+}
+
+.composer-send-btn {
+  background: var(--primary);
+  color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--primary), var(--ink) 18%);
+  border-radius: 999px;
+  padding: 0.5rem 1.25rem;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: transform 200ms ease, background-color 200ms ease, opacity 200ms ease;
+}
+
+.composer-send-btn:hover:not(:disabled) {
+  background: var(--primary-pressed);
+  transform: translateY(-1px);
+}
+
+.composer-send-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.composer-send-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(100%);
+}
+
+.composer-hint {
+  font-size: 13px;
+  color: var(--mute);
+}
+
+.composer-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(0,0,0,0.2);
+  border-top-color: var(--ink);
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.composer-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  min-height: 400px;
+}
+
+.composer-success-icon {
+  color: #27c93f;
+  margin-bottom: 1rem;
+}
+
+.composer-success-title {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+}
+
+.composer-success-text {
+  color: var(--mute);
+  font-size: 15px;
+  margin: 0 0 2rem;
+}
+
+.composer-reset-btn {
+  background: var(--surface-soft);
+  color: var(--ink);
+  border: 1px solid var(--hairline-soft);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.composer-reset-btn:hover {
+  background: var(--surface-card);
+  border-color: var(--hairline);
+}
+
+@media (max-width: 768px) {
+  .contact-hero {
+    padding: 4rem 1rem;
+    margin-top: 3rem;
+    margin-left: -1rem;
+    margin-right: -1rem;
+  }
+  
+  .composer-shell {
+    margin-top: 2rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+  
+  .composer-hint {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Footer Overrides
+   ========================================================================== */
+
+.site-footer {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+  padding: 4rem 1.5rem;
+  margin-top: 0;
+  background-color: var(--primary);
+  color: var(--ink);
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.site-footer::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: 5%;
+  width: 120px;
+  height: 120px;
+  background-color: var(--ink);
+  border-radius: 50%;
+  opacity: 0.04;
+  z-index: 0;
+}
+
+.site-footer::after {
+  content: "";
+  position: absolute;
+  bottom: 20%;
+  right: 5%;
+  width: 160px;
+  height: 160px;
+  background-color: var(--surface-card);
+  border-radius: 20px;
+  transform: rotate(15deg);
+  opacity: 0.15;
+  z-index: 0;
+}
+
+.site-footer > * {
+  position: relative;
+  z-index: 1;
+}
+
+.footer-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.footer-description {
+  margin: 0 !important;
+  max-width: 400px;
+  color: var(--ink);
+}
+
+.footer-email {
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 16px;
+}
+
+.footer-copy {
+  margin: 0;
+  color: rgba(35, 37, 29, 0.7);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Bento Box Hover Arrow
+   ========================================================================== */
+
+.bento-arrow {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 40px;
+  height: 40px;
+  background: var(--surface-soft);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  pointer-events: none;
+  z-index: 20;
+}
