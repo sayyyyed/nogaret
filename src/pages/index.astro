@@ -72,9 +72,28 @@ const education = {
   school: 'UIN Malang',
   period: '2021-2025',
   gpa: 'GPA 3.86',
-  thesis: 'Text Summarization Umpan Balik Pengguna Website SiBayar dengan metode Bidirectional Long Short-Term Memory (BiLSTM)',
-  thesisUrl: '#',
-  citation: 'Aamir, S. (2025). Text Summarization Umpan Balik Pengguna Website SiBayar dengan metode Bidirectional Long Short-Term Memory (BiLSTM). Skripsi. UIN Maulana Malik Ibrahim Malang.',
+  publications: [
+    {
+      title: 'Text Summarization Umpan Balik Pengguna Website SiBayar dengan metode Bidirectional Long Short-Term Memory (BiLSTM)',
+      url: '#',
+      citation: 'Aamir, S. (2025). Text Summarization Umpan Balik Pengguna Website SiBayar dengan metode Bidirectional Long Short-Term Memory (BiLSTM). Skripsi. UIN Maulana Malik Ibrahim Malang.'
+    },
+    {
+      title: 'Another Publication Title Example',
+      url: '#',
+      citation: 'Aamir, S. (2025). Another Publication Title Example. Jurnal Ilmiah Komputer.'
+    },
+     {
+      title: 'Another Publication Title Example',
+      url: '#',
+      citation: 'Aamir, S. (2025). Another Publication Title Example. Jurnal Ilmiah Komputer.'
+    },
+     {
+      title: 'Another Publication Title Example',
+      url: '#',
+      citation: 'Aamir, S. (2025). Another Publication Title Example. Jurnal Ilmiah Komputer.'
+    }
+  ]
 };
 
 const currencies = [
@@ -322,22 +341,26 @@ const hasScrollableExperience = experienceItems.length > 4;
       <p class="m-0 mt-1 text-sm leading-[1.71] text-[var(--mute)]">
         {education.period} / {education.gpa}
       </p>
-      <div class="mt-5">
-        <a
-          class="thesis-link group"
-          href={education.thesisUrl}
-          target="_blank"
-          rel="noreferrer noopener"
-        >
-          <span class="thesis-link-text">{education.thesis}</span>
-          <span class="thesis-link-arrow" aria-hidden="true">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="7" y1="17" x2="17" y2="7" />
-              <polyline points="7 7 17 7 17 17" />
-            </svg>
-          </span>
-          <span class="thesis-tooltip" role="tooltip">{education.citation}</span>
-        </a>
+      <div class="mt-5 flex flex-col gap-4">
+        {education.publications.map(pub => (
+          <div>
+            <a
+              class="thesis-link group"
+              href={pub.url}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <span class="thesis-link-text">{pub.title}</span>
+              <span class="thesis-link-arrow" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="7" y1="17" x2="17" y2="7" />
+                  <polyline points="7 7 17 7 17 17" />
+                </svg>
+              </span>
+              <span class="thesis-tooltip" role="tooltip">{pub.citation}</span>
+            </a>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -439,7 +462,7 @@ const hasScrollableExperience = experienceItems.length > 4;
           end: 'bottom top',
           onUpdate: (self) => {
             const velocity = Math.abs(self.getVelocity()) / 1000;
-            const speedMultiplier = 1 + Math.min(velocity * 0.5, 3);
+            const speedMultiplier = 1 + Math.min(velocity * 0.5, 4);
             tl.timeScale(speedMultiplier);
           },
           onLeave: () => { tl.timeScale(1); },
@@ -454,22 +477,39 @@ const hasScrollableExperience = experienceItems.length > 4;
 
   /* ── Bento Box Hover ── */
   const bentoNotes = document.querySelectorAll('.home-note');
-  bentoNotes.forEach(note => {
+  bentoNotes.forEach((note, i) => {
     const arrow = note.querySelector('.bento-arrow');
     const svg = arrow?.querySelector('svg');
+    const h2 = note.querySelector('h2');
+    const p = note.querySelector('p');
+    const span = note.querySelector('span');
+    const mascot = note.querySelector('.mascot-svg path[fill="#f7a501"]');
+    
     if (!arrow || !svg) return;
     
-    const tlHover = gsap.timeline({ paused: true, defaults: { ease: 'back.out(1.7)', duration: 0.4 } });
-    
-    tlHover.to(arrow, { scale: 1, autoAlpha: 1, backgroundColor: 'var(--primary)', x: 0, y: 0 })
-           .to(svg, { x: 2, y: -2, color: '#23251d' }, "<0.1");
-           
     gsap.set(arrow, { scale: 0.8, autoAlpha: 0, x: -15, y: 15 });
 
-    note.addEventListener('mouseenter', () => tlHover.play());
-    note.addEventListener('mouseleave', () => tlHover.reverse());
-    note.addEventListener('focus', () => tlHover.play());
-    note.addEventListener('blur', () => tlHover.reverse());
+    const tlNote = gsap.timeline({ paused: true, defaults: { ease: 'back.out(1.7)', duration: 0.4 } });
+    const tilt = i % 2 === 0 ? 1.5 : -1.5;
+    
+    tlNote.to(note, { backgroundColor: 'var(--primary)', borderColor: 'var(--primary)', rotation: tilt, scale: 1.02, color: 'var(--ink)' }, 0)
+          .to([h2, p, span], { color: 'var(--ink)' }, 0)
+          .to(arrow, { scale: 1, autoAlpha: 1, backgroundColor: 'var(--ink)', color: 'var(--primary)', x: 0, y: 0 }, 0);
+          
+    if (mascot) {
+      tlNote.to(mascot, { fill: '#ffffff' }, 0);
+    }
+
+    note.addEventListener('mouseenter', () => tlNote.play());
+    note.addEventListener('mouseleave', () => tlNote.reverse());
+    note.addEventListener('focus', () => tlNote.play());
+    note.addEventListener('blur', () => tlNote.reverse());
+
+    const tlArrow = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.2 } });
+    tlArrow.to(arrow, { scale: 1.25, rotation: 15, backgroundColor: '#ffffff', color: 'var(--ink)' });
+
+    arrow.addEventListener('mouseenter', () => tlArrow.play());
+    arrow.addEventListener('mouseleave', () => tlArrow.reverse());
   });
 
   /* ── Contact section reveal ── */
