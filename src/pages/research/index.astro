@@ -9,7 +9,7 @@ import { isPublished, sortByDateDescending } from '../../lib/content/sort';
 const entries = sortByDateDescending((await getCollectionIfNotEmpty('research')).filter(isPublished));
 ---
 
-<BaseLayout title="Research" description="Research notes, sources, and evolving conclusions.">
+<BaseLayout title="Research" description="Research notes, sources, and evolving conclusions." hideFooter>
   <SectionHero title="Research" description="Structured research notes with explicit confidence, sources, and open questions." />
   <section class="grid-list">
     {entries.map((entry) => (

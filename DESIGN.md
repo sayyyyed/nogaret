@@ -183,21 +183,30 @@ components:
     backgroundColor: "{colors.primary}"
     textColor: "{colors.on-primary}"
     typography: "{typography.button-md}"
-    rounded: "{rounded.md}"
-    padding: 8px 16px
-    height: 40px
+    rounded: 8px
+    border: "2px solid #b77912"
+    borderTopColor: "#d89205"
+    shadow: "0 3px 0 #b77912, 0 4px 0 rgba(35, 37, 29, 0.14)"
+    padding: 11px 20px
+    minHeight: 44px
   button-primary-pressed:
-    backgroundColor: "{colors.primary-pressed}"
+    backgroundColor: "{colors.primary}"
     textColor: "{colors.on-primary}"
     typography: "{typography.button-md}"
-    rounded: "{rounded.md}"
+    rounded: 8px
+    borderTopColor: "#7c5311"
+    shadow: "0 1px 0 #b77912, 0 2px 0 rgba(35, 37, 29, 0.12)"
+    transform: "translateY(5px)"
   button-secondary:
-    backgroundColor: "{colors.surface-soft}"
+    backgroundColor: "#f8f8f4"
     textColor: "{colors.ink}"
     typography: "{typography.button-md}"
-    rounded: "{rounded.md}"
-    padding: 8px 16px
-    height: 40px
+    rounded: 8px
+    border: "2px solid #c9cbc7"
+    borderTopColor: "#d8dad6"
+    shadow: "0 3px 0 #d5d7d3, 0 4px 0 rgba(35, 37, 29, 0.12)"
+    padding: 11px 20px
+    minHeight: 44px
   button-tertiary:
     backgroundColor: "transparent"
     textColor: "{colors.ink}"
@@ -579,8 +588,8 @@ Build components from these reusable atoms:
 
 Interactions should feel like a playful desktop UI, not a SaaS dashboard. Controls are compact, tactile, and slightly mechanical.
 
-- **Pointer hover:** nav triggers and toolbar controls tint to a soft accent fill, usually `surface-soft`/`accent-2`; text stays dark. Primary actions darken rather than lifting.
-- **Pressed state:** buttons sit lower by changing the fill/border color (`primary` to `primary-active`) or by a small translate/top adjustment. Avoid bouncy transforms.
+- **Pointer hover:** nav triggers and toolbar controls tint to a soft accent fill, usually `surface-soft`/`accent-2`; text stays dark. Raised CTAs lift by about 3px and darken the top border slightly.
+- **Pressed state:** raised CTAs drop down by about 5px and compress the lower layer. Avoid bouncy transforms.
 - **Focus visible:** use the existing translucent blue focus ring. Keep outline outside the 4-6px shape.
 - **Open state:** dropdown triggers use the same tint as hover and should expose the panel without moving neighboring nav items.
 - **Tabs:** active tabs attach visually to the panel below. The active tab can use a saturated feature color, while inactive tabs remain text-only or low-fill. Panel content crossfades over roughly 300ms.
@@ -590,28 +599,28 @@ Interactions should feel like a playful desktop UI, not a SaaS dashboard. Contro
 
 ### Button Anatomy
 
-Current PostHog buttons are smaller and more tactile than generic 40px SaaS buttons. The top-nav CTA captured at desktop is 128 x 32px, 6px radius, 1px darker orange border, dark olive text, and no shadow. Hero CTAs are roughly 33px high with 6px radius. Labels are bold, compact, and centered.
+Current site buttons should feel like small physical controls: a bright face, thick border, visible lower layer, and a short mechanical hover lift. Keep the PostHog-inspired yellow/cream palette, but use the raised 3D treatment for local CTAs so actions stand out more than flat navigation triggers.
 
 Button parts:
-- **Outer element:** `inline-flex`, center aligned, stable height (`32-40px` depending on placement), 1px or 1.5px border.
-- **Fill:** yellow-orange for primary, white/orange-tinted for secondary outline, transparent for tertiary links.
+- **Outer element:** `inline-flex`, center aligned, stable minimum height (`44px` for CTAs), 2px border, and a lower `box-shadow` layer.
+- **Fill:** yellow-orange for primary, warm white for secondary, transparent for tertiary links.
 - **Label:** 14-15px, 600-700, no letter spacing, no uppercase.
-- **Border:** darker orange (`{colors.primary-active}` / `#b17816`) on primary and secondary outline buttons.
-- **Radius:** 5-6px. Do not use pill radius for primary CTA unless it is specifically a nav badge.
-- **Transition:** color/background/border at 150ms; avoid default `transition-all` for new components.
+- **Border:** darker orange on primary, soft gray on secondary, with a slightly lighter top edge at rest.
+- **Radius:** 8px for raised CTAs. Do not use pill radius for this raised style.
+- **Transition:** background/border/box-shadow/transform at roughly 180ms; avoid default `transition-all` for new components.
 
 Implementation shape:
 
 ```html
-<a class="inline-flex h-8 items-center justify-center rounded-md border border-[var(--primary-active)] bg-[#cd8407] px-3.5 text-sm font-bold leading-none text-[var(--ink)] no-underline transition-[background-color,border-color,color] duration-150 hover:bg-[var(--primary-pressed)] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]">
+<a class="inline-flex min-h-11 translate-y-0 items-center justify-center rounded-lg border-2 border-[#b77912] border-t-[#d89205] bg-[var(--primary)] px-5 py-2.5 text-sm font-extrabold leading-tight text-[var(--ink)] no-underline shadow-[0_3px_0_#b77912,0_4px_0_rgba(35,37,29,0.14)] transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-[3px] hover:border-t-[#7c5311] hover:shadow-[0_4px_0_#a4680e,0_5px_0_rgba(35,37,29,0.12)] active:translate-y-[5px] active:shadow-[0_1px_0_#b77912,0_2px_0_rgba(35,37,29,0.12)] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]">
   Get started - free
 </a>
 ```
 
 Use variants this way:
-- **Primary compact:** top nav, window toolbar CTA, high-priority inline actions. Height 32px.
-- **Primary standard:** hero/section CTAs. Height 33-40px depending on surrounding rhythm.
-- **Secondary outline:** "Install with AI" style, white or orange-tinted fill, orange border, dark label.
+- **Primary compact:** top nav, window toolbar CTA, high-priority inline actions. Keep compact padding, but preserve the 3D lower layer.
+- **Primary standard:** hero/section CTAs. Minimum height 44px depending on surrounding rhythm.
+- **Secondary raised:** warm-white fill, gray border, dark label, matching hover lift and pressed compression.
 - **Tertiary utility link:** icon + underlined text, 14px/20, muted text that darkens on hover.
 - **Icon button:** 32px square, transparent or soft fill, 4px radius, used for search/settings/toolbar actions.
 
@@ -643,16 +652,16 @@ Tailwind-friendly dropdown shell:
 
 ### Buttons
 
-**`button-primary`** — the universal PostHog CTA
-- Background is yellow-orange, often rendered darker in the current live chrome (`#cd8407` in top nav, `#eb9d2a` in some in-window CTAs), text `{colors.on-primary}` (deep olive), type `{typography.button-md}`, rounded `{rounded.md}`.
-- Top-nav and toolbar CTAs use the compact version: 32px height, `0 14px` horizontal padding, 1px darker orange border, no shadow.
-- Hero/section CTAs can remain 33-40px tall where the surrounding layout needs more presence.
+**`button-primary`** — the universal raised CTA
+- Background is yellow-orange, text `{colors.on-primary}` (deep olive), type `{typography.button-md}`, rounded `8px`, 2px darker orange border, and a crisp lower shadow layer.
+- Top-nav and toolbar CTAs may use compact padding, but still keep enough vertical room for the 3D lower layer.
+- Hero/section CTAs should use at least 44px minimum height so the raised treatment feels intentional.
 - Used for "Get started - free", "Sign up", "Subscribe", and other decisive conversion actions.
-- Pressed state lives in `button-primary-pressed`: fill drops toward `{colors.primary-pressed}` / `{colors.primary-active}`, border remains visible.
+- Hover state lifts by 3px and darkens the top border. Pressed state lives in `button-primary-pressed`: the button drops down, and the lower layer compresses.
 
 **`button-secondary`** — soft alternative on cream canvas
-- Current hero secondary is an orange-bordered outline button ("Install with AI"): white or lightly orange-tinted fill, `{colors.ink}` or `{colors.body}` text, 1px darker orange border, 33px height, rounded `{rounded.md}`.
-- Use soft-surface secondary buttons for quiet UI actions inside app chrome and docs. Use orange-outline secondary buttons when paired directly with a primary CTA.
+- Current secondary is a raised warm-white button with gray border and gray lower layer. It mirrors the primary mechanics without using yellow.
+- Use secondary buttons for quiet UI actions inside app chrome and docs. Use orange-outline tertiary links only when paired directly with a primary CTA.
 - "Install with AI", "Talk to sales", "Read docs", "Watch demo" — second-tier actions paired with the yellow primary.
 
 **`button-tertiary`** — ghost text button
@@ -779,9 +788,9 @@ Tailwind-friendly dropdown shell:
 Use this checklist when translating the PostHog system into Astro/React/Tailwind components.
 
 1. **State attributes first:** expose `aria-selected`, `aria-expanded`, `data-state`, `data-open`, or `data-disabled` on every interactive component. Style from those attributes with Tailwind variants instead of adding many bespoke global selectors.
-2. **Stable geometry:** set fixed heights for buttons (`h-8`, `h-10`), nav triggers (`h-7`), icon buttons (`size-8`), tabs, and toolbar controls so hover/open states never shift layout.
-3. **Compact controls:** default controls are smaller than typical SaaS UI. Reach for `text-[13px]`, `text-sm`, `px-2`, `px-3.5`, `rounded`, and `rounded-md` before larger button recipes.
-4. **Borders over shadows:** use `border border-[var(--hairline)]` or darker orange CTA borders. Reserve big shadows for floating app windows and overlays only.
+2. **Stable geometry:** set fixed heights or minimum heights for buttons (`min-h-11` for raised CTAs), nav triggers (`h-7`), icon buttons (`size-8`), tabs, and toolbar controls so hover/open states never shift layout.
+3. **Compact controls:** default controls are smaller than typical SaaS UI. Reach for `text-[13px]`, `text-sm`, `px-2`, `px-3.5`, `rounded`, and `rounded-md` for nav controls; use `rounded-lg` only for raised CTAs.
+4. **Crisp depth:** raised buttons use a hard lower `box-shadow` layer, not a blurred glow. Cards, nav triggers, and dropdown rows should stay border-led and mostly flat.
 5. **Overlay behavior:** dropdowns, tooltips, command palettes, and cookie banners should escape clipping with fixed/absolute positioning and a clear z-index. Do not render dropdowns inside an `overflow-hidden` app-window body unless they are intentionally clipped.
 6. **Reduced motion:** tab fades, dropdown entrances, and window reveals should become instant or near-instant under `prefers-reduced-motion`.
 7. **Keyboard support:** buttons and nav triggers must have visible focus, Enter/Space activation, Escape-to-close for dropdowns, and Arrow-key movement for tablists/menus.
@@ -794,8 +803,8 @@ Use this checklist when translating the PostHog system into Astro/React/Tailwind
 These are implementation sketches for local components. Prefer project tokens and Tailwind utilities over new global CSS.
 
 ```html
-<!-- Primary compact CTA -->
-<a class="inline-flex h-8 items-center justify-center rounded-md border border-[var(--primary-active)] bg-[#cd8407] px-3.5 text-sm font-bold leading-none text-[var(--ink)] no-underline transition-[background-color,border-color,color] duration-150 hover:bg-[var(--primary-pressed)] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]">
+<!-- Primary raised CTA -->
+<a class="inline-flex min-h-11 translate-y-0 items-center justify-center rounded-lg border-2 border-[#b77912] border-t-[#d89205] bg-[var(--primary)] px-5 py-2.5 text-sm font-extrabold leading-tight text-[var(--ink)] no-underline shadow-[0_3px_0_#b77912,0_4px_0_rgba(35,37,29,0.14)] transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-[3px] hover:border-t-[#7c5311] hover:shadow-[0_4px_0_#a4680e,0_5px_0_rgba(35,37,29,0.12)] active:translate-y-[5px] active:shadow-[0_1px_0_#b77912,0_2px_0_rgba(35,37,29,0.12)] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]">
   Get started - free
 </a>
 
