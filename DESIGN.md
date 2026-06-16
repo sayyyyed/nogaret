@@ -208,6 +208,61 @@ components:
     backgroundColor: "{colors.surface-soft}"
     textColor: "{colors.ash}"
     rounded: "{rounded.md}"
+  button-primary-compact:
+    backgroundColor: "#cd8407"
+    textColor: "{colors.on-primary}"
+    typography: "{typography.button-md}"
+    rounded: "{rounded.md}"
+    border: "1px solid {colors.primary-active}"
+    height: 32px
+    padding: 0 14px
+  button-secondary-outline:
+    backgroundColor: "{colors.surface-card}"
+    textColor: "{colors.ink}"
+    typography: "{typography.button-md}"
+    rounded: "{rounded.md}"
+    border: "1px solid {colors.primary-active}"
+    height: 33px
+    padding: 0 14px
+  top-nav-trigger:
+    backgroundColor: "transparent"
+    textColor: "{colors.ink}"
+    typography: "{typography.caption-sm}"
+    rounded: "{rounded.sm}"
+    padding: 2px 8px
+    height: 28px
+  icon-button:
+    backgroundColor: "transparent"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.sm}"
+    padding: 6px
+    height: 32px
+    width: 32px
+  dropdown-panel:
+    backgroundColor: "{colors.surface-card}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.md}"
+    border: "1px solid {colors.hairline}"
+    padding: 8px
+  dropdown-item:
+    backgroundColor: "transparent"
+    textColor: "{colors.body}"
+    typography: "{typography.body-xs}"
+    rounded: "{rounded.sm}"
+    padding: 8px 10px
+  desktop-icon-link:
+    backgroundColor: "transparent"
+    textColor: "{colors.body}"
+    typography: "{typography.body-xs}"
+    rounded: "{rounded.sm}"
+    width: 96px
+    minHeight: 60px
+  app-window-shell:
+    backgroundColor: "{colors.surface-card}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.sm}"
+    border: "1px solid {colors.ash}"
+    shadow: "0 25px 50px -12px rgba(0,0,0,0.25)"
   text-input:
     backgroundColor: "{colors.surface-card}"
     textColor: "{colors.ink}"
@@ -506,31 +561,119 @@ There is no photography. Visual elements are limited to:
 
 ## Components
 
-> **No hover states documented** per system policy. Each spec covers Default and Active/Pressed only.
+> **Capture note:** refreshed from the live `https://posthog.com/` home page on 2026-06-16 using Playwright screenshots and computed styles. Reference files are in `tmp/posthog-home-1440-settled.png` and `tmp/posthog-design-capture.json`.
+
+### Atomic Component Model
+
+PostHog's current marketing UI behaves like a small desktop operating system, so components should be composed in layers rather than built as unrelated cards. The smallest atoms are text tokens, 1px borders, 4-6px radii, 13-15px control labels, tiny bitmap/SVG icons, and the yellow-orange action fill. Molecules combine these into buttons, nav triggers, desktop icon links, toolbar controls, tabs, inline links, and file/window chrome. Organisms are the top menu bar, desktop icon rail, app window shell, toolbar strip, tabbed feature panel, cookie banner, and footer/link directory. Templates place those organisms on a textured cream wallpaper with a centered application window and peripheral desktop shortcuts.
+
+Build components from these reusable atoms:
+- **Surface atom:** cream wallpaper (`{colors.canvas}` or `#e1d7c2` for the current garden wallpaper), white app surface, and soft toolbar surface.
+- **Rule atom:** 1px olive-gray border. Use borders more than shadows; the app window is the rare large-shadow exception.
+- **Radius atom:** 4px for nav triggers and form controls, 5-6px for buttons, 4px window shell corners, full radius only for tiny badges/pills.
+- **Type atom:** 13px/1 nav trigger, 14px/20 inline utility links, 15px/1.5 body in app-window content, 24-28px heavy section headings.
+- **Icon atom:** tiny desktop/file icons paired with labels. Icons are literal objects, not generic line icons, and sit above text in a column.
+- **Motion atom:** 150ms color transitions for controls; 300ms fade/slide for tab panels; no large motion unless it supports the desktop/window metaphor.
+
+### Interaction Model
+
+Interactions should feel like a playful desktop UI, not a SaaS dashboard. Controls are compact, tactile, and slightly mechanical.
+
+- **Pointer hover:** nav triggers and toolbar controls tint to a soft accent fill, usually `surface-soft`/`accent-2`; text stays dark. Primary actions darken rather than lifting.
+- **Pressed state:** buttons sit lower by changing the fill/border color (`primary` to `primary-active`) or by a small translate/top adjustment. Avoid bouncy transforms.
+- **Focus visible:** use the existing translucent blue focus ring. Keep outline outside the 4-6px shape.
+- **Open state:** dropdown triggers use the same tint as hover and should expose the panel without moving neighboring nav items.
+- **Tabs:** active tabs attach visually to the panel below. The active tab can use a saturated feature color, while inactive tabs remain text-only or low-fill. Panel content crossfades over roughly 300ms.
+- **Disabled state:** lower opacity and muted text. Do not invent gray-on-gray ghost buttons that lose contrast.
+- **Desktop icon links:** icons can underline or tint labels on hover, but the icon/label stack should not resize.
+- **Cookie/banner overlays:** floating utility panels can use a shadow, but keep them rectangular with 6-8px radius and a crisp close affordance.
+
+### Button Anatomy
+
+Current PostHog buttons are smaller and more tactile than generic 40px SaaS buttons. The top-nav CTA captured at desktop is 128 x 32px, 6px radius, 1px darker orange border, dark olive text, and no shadow. Hero CTAs are roughly 33px high with 6px radius. Labels are bold, compact, and centered.
+
+Button parts:
+- **Outer element:** `inline-flex`, center aligned, stable height (`32-40px` depending on placement), 1px or 1.5px border.
+- **Fill:** yellow-orange for primary, white/orange-tinted for secondary outline, transparent for tertiary links.
+- **Label:** 14-15px, 600-700, no letter spacing, no uppercase.
+- **Border:** darker orange (`{colors.primary-active}` / `#b17816`) on primary and secondary outline buttons.
+- **Radius:** 5-6px. Do not use pill radius for primary CTA unless it is specifically a nav badge.
+- **Transition:** color/background/border at 150ms; avoid default `transition-all` for new components.
+
+Implementation shape:
+
+```html
+<a class="inline-flex h-8 items-center justify-center rounded-md border border-[var(--primary-active)] bg-[#cd8407] px-3.5 text-sm font-bold leading-none text-[var(--ink)] no-underline transition-[background-color,border-color,color] duration-150 hover:bg-[var(--primary-pressed)] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]">
+  Get started - free
+</a>
+```
+
+Use variants this way:
+- **Primary compact:** top nav, window toolbar CTA, high-priority inline actions. Height 32px.
+- **Primary standard:** hero/section CTAs. Height 33-40px depending on surrounding rhythm.
+- **Secondary outline:** "Install with AI" style, white or orange-tinted fill, orange border, dark label.
+- **Tertiary utility link:** icon + underlined text, 14px/20, muted text that darkens on hover.
+- **Icon button:** 32px square, transparent or soft fill, 4px radius, used for search/settings/toolbar actions.
+
+### Dropdowns & Menus
+
+Top navigation uses compact Radix-like menu triggers: 13px medium labels, 28px high, `2px 8px` padding, 4px radius, transparent by default. On hover/open, they get a soft accent background while keeping dark text. The trigger row stays flat on the cream bar.
+
+Dropdown panels should feel like small desktop menus:
+- **Placement:** absolute/fixed below the trigger, z-index above the app window, no layout shift.
+- **Surface:** white or near-white, 1px olive hairline, 6px radius, 8px internal padding.
+- **Width:** content-driven. Simple menus can be 220-280px; product megamenus can expand into 2-4 columns.
+- **Items:** 14px or 15px label, optional 12-13px description, 8-10px padding, 4px radius.
+- **Grouping:** use short section labels and hairline separators only when they clarify scanning.
+- **Hover item:** soft cream/greenish tint, dark text, no heavy shadow.
+- **Keyboard:** roving focus, Escape closes, Arrow keys move through items, Enter activates.
+- **Animation:** 120-180ms opacity plus 2-4px translate. Respect reduced motion with an instant show/hide.
+
+Tailwind-friendly dropdown shell:
+
+```html
+<button class="flex h-7 items-center gap-1 rounded px-2 text-[13px] font-medium leading-none text-[var(--ink)] hover:bg-[var(--surface-soft)] data-[state=open]:bg-[var(--surface-soft)]">
+  Product OS
+</button>
+<div class="absolute top-full z-50 mt-1 w-72 rounded-md border border-[var(--hairline)] bg-[var(--surface-card)] p-2 text-sm text-[var(--body)]">
+  <a class="block rounded px-2.5 py-2 font-semibold text-[var(--ink)] hover:bg-[var(--surface-soft)]">Product analytics</a>
+  <a class="block rounded px-2.5 py-2 text-[var(--body)] hover:bg-[var(--surface-soft)]">Session replay</a>
+</div>
+```
 
 ### Buttons
 
 **`button-primary`** — the universal PostHog CTA
-- Background `{colors.primary}` (yellow-orange), text `{colors.on-primary}` (deep olive), type `{typography.button-md}`, padding `8px 16px`, height `40px`, rounded `{rounded.md}`.
-- Used for "Get started — free" (sticky top-nav CTA), "Sign up", "Try it free", "Subscribe" — every primary action.
-- Pressed state lives in `button-primary-pressed` — background drops to `{colors.primary-pressed}`.
+- Background is yellow-orange, often rendered darker in the current live chrome (`#cd8407` in top nav, `#eb9d2a` in some in-window CTAs), text `{colors.on-primary}` (deep olive), type `{typography.button-md}`, rounded `{rounded.md}`.
+- Top-nav and toolbar CTAs use the compact version: 32px height, `0 14px` horizontal padding, 1px darker orange border, no shadow.
+- Hero/section CTAs can remain 33-40px tall where the surrounding layout needs more presence.
+- Used for "Get started - free", "Sign up", "Subscribe", and other decisive conversion actions.
+- Pressed state lives in `button-primary-pressed`: fill drops toward `{colors.primary-pressed}` / `{colors.primary-active}`, border remains visible.
 
 **`button-secondary`** — soft alternative on cream canvas
-- Background `{colors.surface-soft}` (`#e5e7e0`), text `{colors.ink}`, type `{typography.button-md}`, padding `8px 16px`, height `40px`, rounded `{rounded.md}`.
-- "Talk to sales", "Read docs", "Watch demo" — second-tier actions paired with the yellow primary.
+- Current hero secondary is an orange-bordered outline button ("Install with AI"): white or lightly orange-tinted fill, `{colors.ink}` or `{colors.body}` text, 1px darker orange border, 33px height, rounded `{rounded.md}`.
+- Use soft-surface secondary buttons for quiet UI actions inside app chrome and docs. Use orange-outline secondary buttons when paired directly with a primary CTA.
+- "Install with AI", "Talk to sales", "Read docs", "Watch demo" — second-tier actions paired with the yellow primary.
 
 **`button-tertiary`** — ghost text button
-- Background transparent, text `{colors.ink}`, type `{typography.button-md}`, padding `8px 12px`, rounded `{rounded.md}`.
-- Lowest-emphasis action: "See all docs →", "Browse all features".
+- Background transparent, text `{colors.body}` or `{colors.ink}`, type `{typography.button-md}` or 14px/20 utility label.
+- Often appears as an inline underlined link with a leading tiny icon: "MCP", "Watch a demo", "Talk to a human".
+- Lowest-emphasis action: "See all docs", "Browse all features", "Explore data sources".
 
 **`button-disabled`**
 - Background `{colors.surface-soft}`, text `{colors.ash}` — flat soft cream-gray.
 
+**`button-icon`**
+- 32px square, 4px radius, transparent by default, dark olive icon, soft-surface hover. Used for search, settings, help, profile, close, pause, and window controls.
+- Icon-only buttons must carry an accessible label. Prefer familiar symbols over text.
+
 ### Tabs & Chips
 
 **`product-tab`** + **`product-tab-active`** — major product section tabs
-- Default: transparent background, text `{colors.body}`, type `{typography.body-strong}`, padding `8px 12px`, rounded `{rounded.md}`.
-- Active: background flips to `{colors.surface-card}` (white), text `{colors.ink}` — the tab card lifts off the cream canvas as the visual signal of selection.
+- Default: transparent background, text `{colors.body}`, type `{typography.body-strong}`, padding `10px 14px`, rounded top corners. It sits on the same plane as the app content.
+- Active: a saturated feature color tab attaches to the bordered panel below. The captured active tab uses a turquoise fill for "One place for product data"; another tab can use a soft red/pink fill. Text remains dark.
+- The panel border should inherit or coordinate with the active tab color. Captured panel: thick turquoise/green border around a white content field.
+- Tab content uses `data-state=active` fade-in around 300ms. Inactive panels remain mounted or hidden without changing layout height abruptly.
 
 **`pill-tab`** + **`pill-tab-active`** — compact filter pill
 - Default: transparent background, text `{colors.body}`, type `{typography.button-sm}`, padding `6px 14px`, rounded `{rounded.full}`.
@@ -593,8 +736,20 @@ There is no photography. Visual elements are limited to:
 ### Navigation
 
 **`primary-nav`**
-- Background `{colors.canvas}` (cream — same as the page), text `{colors.ink}`, height `56px`, type `{typography.body-strong}`, rounded `{rounded.none}`.
-- Layout (desktop): PostHog wordmark + hedgehog logo at left, nav menu cluster ("Pricing · Docs · Community · Company"), right cluster with a search-glyph, "Login" link, and the always-yellow `{component.button-primary}` "Get started — free" pill anchored to the far right.
+- Current live chrome is a 40px desktop menu bar pinned to the top of the viewport. Background is a soft cream/green surface, with a 1px bottom border. It is intentionally compact, closer to OS menu chrome than a marketing navbar.
+- Layout (desktop): tiny PostHog mark at far left, nav trigger cluster ("Product OS", "Pricing", "Docs", "Community", "Company", "More"), right cluster with the compact `{component.button-primary-compact}` "Get started - free", then icon buttons for search/help/status/profile.
+- Nav triggers use `{component.top-nav-trigger}`: 13px medium text, 28px height, transparent default, soft surface on hover/open.
+- Keep nav height stable. Dropdowns and command/search surfaces overlay below it instead of increasing header height.
+
+**`desktop-icon-link`**
+- A vertical shortcut on the wallpaper. Icon sits above a 13-14px label; stack width is about 96px with a 60px minimum height.
+- Used for "home.mdx", "Product OS", "Pricing", "customers.mdx", "demo.mov", "Docs", "Talk to a human", "Ask a question", "Sign up", and right-side utility links.
+- Treat these as navigation affordances, not cards. No border or panel around each icon. Hover can tint/underline the label, but do not resize the stack.
+
+**`app-window-shell`**
+- The main page content is framed as a floating application window, not a normal centered card. Captured desktop window: about 960px wide, 1000px tall at 1440px viewport, 4px radius, 1px olive-gray border, and a large OS-window shadow.
+- Anatomy: title bar (file icon, title centered, window controls), toolbar strip (select controls, formatting icons, search/settings, CTA), scrollable white content surface.
+- Use window chrome when the page should feel inspectable/workbench-like. Avoid nesting cards inside the window unless the nested surface is a real panel such as tabs or code.
 
 **`sub-nav-strip`** — secondary nav bar (under primary)
 - Background `{colors.surface-soft}`, text `{colors.body}` in `{typography.body-xs}`, height `40px`, rounded `{rounded.none}`.
@@ -618,6 +773,54 @@ There is no photography. Visual elements are limited to:
 
 **`link-inline`** — body-prose anchor link
 - `{colors.link-teal}` (`#1078a3`) in body prose with no underline by default; underline appears on focus. The brand's primary inline link color.
+
+## Interaction Implementation Checklist
+
+Use this checklist when translating the PostHog system into Astro/React/Tailwind components.
+
+1. **State attributes first:** expose `aria-selected`, `aria-expanded`, `data-state`, `data-open`, or `data-disabled` on every interactive component. Style from those attributes with Tailwind variants instead of adding many bespoke global selectors.
+2. **Stable geometry:** set fixed heights for buttons (`h-8`, `h-10`), nav triggers (`h-7`), icon buttons (`size-8`), tabs, and toolbar controls so hover/open states never shift layout.
+3. **Compact controls:** default controls are smaller than typical SaaS UI. Reach for `text-[13px]`, `text-sm`, `px-2`, `px-3.5`, `rounded`, and `rounded-md` before larger button recipes.
+4. **Borders over shadows:** use `border border-[var(--hairline)]` or darker orange CTA borders. Reserve big shadows for floating app windows and overlays only.
+5. **Overlay behavior:** dropdowns, tooltips, command palettes, and cookie banners should escape clipping with fixed/absolute positioning and a clear z-index. Do not render dropdowns inside an `overflow-hidden` app-window body unless they are intentionally clipped.
+6. **Reduced motion:** tab fades, dropdown entrances, and window reveals should become instant or near-instant under `prefers-reduced-motion`.
+7. **Keyboard support:** buttons and nav triggers must have visible focus, Enter/Space activation, Escape-to-close for dropdowns, and Arrow-key movement for tablists/menus.
+8. **Literal icons:** use object-like icons (file, folder, calculator, envelope, book, trash, search, profile) when they support the desktop metaphor. Avoid generic oversized feature icons above headings.
+9. **Content density:** app-window panels can be dense. Use hairline dividers, compact columns, and short link rows instead of spacious marketing cards.
+10. **CTA scarcity:** one strong yellow-orange CTA per chrome area. Supporting actions should be outline, link, or icon-button treatments.
+
+## Tailwind Recipes
+
+These are implementation sketches for local components. Prefer project tokens and Tailwind utilities over new global CSS.
+
+```html
+<!-- Primary compact CTA -->
+<a class="inline-flex h-8 items-center justify-center rounded-md border border-[var(--primary-active)] bg-[#cd8407] px-3.5 text-sm font-bold leading-none text-[var(--ink)] no-underline transition-[background-color,border-color,color] duration-150 hover:bg-[var(--primary-pressed)] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]">
+  Get started - free
+</a>
+
+<!-- Nav trigger -->
+<button class="flex h-7 items-center gap-1 rounded px-2 text-[13px] font-medium leading-none text-[var(--ink)] hover:bg-[var(--surface-soft)] data-[state=open]:bg-[var(--surface-soft)]">
+  Product OS
+</button>
+
+<!-- Dropdown panel and item -->
+<div class="absolute top-full z-50 mt-1 w-72 rounded-md border border-[var(--hairline)] bg-[var(--surface-card)] p-2">
+  <a class="block rounded px-2.5 py-2 text-sm font-semibold text-[var(--ink)] no-underline hover:bg-[var(--surface-soft)]">Product analytics</a>
+  <a class="block rounded px-2.5 py-2 text-sm text-[var(--body)] no-underline hover:bg-[var(--surface-soft)]">Session replay</a>
+</div>
+
+<!-- Desktop icon link -->
+<a class="inline-flex min-h-[60px] w-24 flex-col items-center justify-start gap-1 rounded text-center text-sm leading-tight text-[var(--body)] no-underline hover:text-[var(--ink)] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]">
+  <span class="grid size-9 place-items-center" aria-hidden="true"></span>
+  <span>Docs</span>
+</a>
+
+<!-- Tab trigger -->
+<button class="rounded-t-md px-3.5 py-2.5 text-sm font-bold text-[var(--body)] data-[state=active]:bg-[#39dfc0] data-[state=active]:text-[var(--ink)]">
+  One place for product data
+</button>
+```
 
 ## Do's and Don'ts
 
@@ -682,8 +885,9 @@ The only "imagery" in the system is hand-drawn hedgehog illustrations rendered a
 
 ## Known Gaps
 
-- **Mobile screenshots not captured** — responsive behavior synthesizes PostHog's mobile pattern (hamburger drawer, single-column grid, doc sidebar accordion) from desktop evidence and the breakpoint stack.
-- **Hover states not documented** by system policy.
+- **Mobile screenshots not refreshed in this pass** — responsive behavior still synthesizes PostHog's mobile pattern (hamburger drawer, single-column grid, doc sidebar accordion) from desktop evidence and the breakpoint stack.
+- **Desktop screenshot captured** — current home-page reference lives at `tmp/posthog-home-1440-settled.png`; computed style capture lives at `tmp/posthog-design-capture.json`.
+- **Dropdown screenshots attempted** — hover screenshots are stored in `tmp/posthog-hover-*.png`, but the live top nav did not expose large dropdown panels during this capture. Dropdown guidance above is based on the captured Radix-like trigger styles plus PostHog's existing menu vocabulary.
 - **In-product app chrome** (PostHog dashboard, charts, session replay player) not in the captured set — the marketing site is documented here, not the in-product analytics interface.
 - **Authenticated chrome** (login modal, account dashboard, billing settings) not in the captured pages.
 - **Form validation states** beyond the focused-state input not present in the captured surfaces.
