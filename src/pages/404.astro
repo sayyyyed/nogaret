@@ -1,0 +1,12 @@
+---
+import ErrorState from '../components/content/ErrorState.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found" description="The page you requested could not be found." hideFooter>
+  <ErrorState
+    code="404"
+    title="This page wandered off."
+    description="The route does not exist, moved, or was never published. Start from the home page or keep reading from the notes archive."
+  />
+</BaseLayout>

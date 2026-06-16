@@ -1,0 +1,67 @@
+---
+interface Props {
+  code: '404' | '500';
+  title: string;
+  description: string;
+  primaryLabel?: string;
+  primaryHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+}
+
+const {
+  code,
+  title,
+  description,
+  primaryLabel = 'Go home',
+  primaryHref = '/',
+  secondaryLabel = 'Browse notes',
+  secondaryHref = '/notes/',
+} = Astro.props;
+---
+
+<section class="grid min-h-[calc(100dvh-96px)] place-items-center py-12 md:py-16" aria-labelledby="error-title">
+  <div class="grid w-full max-w-5xl items-center gap-8 md:grid-cols-[minmax(0,1fr)_minmax(220px,340px)]">
+    <div class="min-w-0">
+      <p class="m-0 inline-flex rounded bg-[var(--surface-soft)] px-2.5 py-1 font-mono text-sm font-semibold leading-none text-[var(--ink)] ring-1 ring-[var(--hairline-soft)]">
+        status.{code}
+      </p>
+
+      <h1 id="error-title" class="m-0 mt-5 max-w-2xl text-5xl font-extrabold leading-[0.98] tracking-normal text-[var(--ink)] sm:text-6xl md:text-7xl">
+        {title}
+      </h1>
+
+      <p class="m-0 mt-5 max-w-xl text-base leading-relaxed text-[var(--body)] md:text-lg">
+        {description}
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          class="inline-flex min-h-11 translate-y-0 items-center justify-center rounded-lg border-2 border-[#b77912] border-t-[#d89205] bg-[var(--primary)] px-5 py-2.5 text-sm font-extrabold leading-tight text-[var(--ink)] no-underline shadow-[0_3px_0_#b77912,0_4px_0_rgba(35,37,29,0.14)] transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-[3px] hover:border-t-[#7c5311] hover:shadow-[0_4px_0_#a4680e,0_5px_0_rgba(35,37,29,0.12)] active:translate-y-[5px] active:shadow-[0_1px_0_#b77912,0_2px_0_rgba(35,37,29,0.12)] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+          href={primaryHref}
+        >
+          {primaryLabel}
+        </a>
+        <a
+          class="inline-flex min-h-11 translate-y-0 items-center justify-center rounded-lg border-2 border-[#c9cbc7] border-t-[#d8dad6] bg-[#f8f8f4] px-5 py-2.5 text-sm font-extrabold leading-tight text-[var(--ink)] no-underline shadow-[0_3px_0_#d5d7d3,0_4px_0_rgba(35,37,29,0.12)] transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-[3px] hover:border-t-[#aeb2ac] hover:bg-white hover:shadow-[0_4px_0_#c4c7c1,0_5px_0_rgba(35,37,29,0.1)] active:translate-y-[5px] active:shadow-[0_1px_0_#d5d7d3,0_2px_0_rgba(35,37,29,0.1)] focus-visible:outline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)]"
+          href={secondaryHref}
+        >
+          {secondaryLabel}
+        </a>
+      </div>
+    </div>
+
+    <div class="relative min-h-[240px] overflow-hidden rounded-lg border border-[var(--hairline)] bg-[var(--surface-doc)] p-5 md:min-h-[320px]">
+      <div class="absolute inset-x-5 top-5 flex items-center gap-1.5 border-b border-[var(--hairline-soft)] pb-3" aria-hidden="true">
+        <span class="size-3 rounded-full bg-[#ff5f56]"></span>
+        <span class="size-3 rounded-full bg-[#ffbd2e]"></span>
+        <span class="size-3 rounded-full bg-[#27c93f]"></span>
+      </div>
+      <div class="grid h-full place-items-center pt-10">
+        <span class="font-mono text-[7rem] font-black leading-none text-[var(--primary)] drop-shadow-[0_4px_0_rgba(35,37,29,0.16)] md:text-[9rem]">
+          {code}
+        </span>
+      </div>
+    </div>
+  </div>
+</section>

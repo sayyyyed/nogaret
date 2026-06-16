@@ -16,7 +16,14 @@ const hasScrollableExperience = experienceItems.length > 4;
     <aside class="doc-sidebar-panel" aria-label="Experience navigation">
       <div class={`experience-sidebar-scroll ${hasScrollableExperience ? 'is-scrollable' : ''}`} data-experience-scroll-wrap>
         {hasScrollableExperience && (
-          <span class="experience-scroll-arrow experience-scroll-arrow-up" aria-hidden="true" data-experience-scroll-up>&uarr;</span>
+          <button
+            class="experience-scroll-arrow experience-scroll-arrow-up"
+            type="button"
+            aria-label="Scroll to first experience item"
+            data-experience-scroll-up
+          >
+            &uarr;
+          </button>
         )}
         <div class="experience-tab-list flex gap-2 overflow-x-auto pb-1 lg:grid lg:overflow-visible lg:pb-0" role="tablist" aria-orientation="vertical" data-experience-scroll>
           {experienceItems.map((item, index) => (
@@ -37,7 +44,14 @@ const hasScrollableExperience = experienceItems.length > 4;
           ))}
         </div>
         {hasScrollableExperience && (
-          <span class="experience-scroll-arrow experience-scroll-arrow-down" aria-hidden="true" data-experience-scroll-down>&darr;</span>
+          <button
+            class="experience-scroll-arrow experience-scroll-arrow-down"
+            type="button"
+            aria-label="Scroll to last experience item"
+            data-experience-scroll-down
+          >
+            &darr;
+          </button>
         )}
       </div>
     </aside>
@@ -116,6 +130,8 @@ const hasScrollableExperience = experienceItems.length > 4;
     const experienceTabs = Array.from(section.querySelectorAll('[data-experience-tab]'));
     const experiencePanels = Array.from(section.querySelectorAll('[data-experience-panel]'));
     const experienceScrollAreas = Array.from(section.querySelectorAll('[data-experience-scroll]'));
+    const experienceScrollUpButtons = Array.from(section.querySelectorAll('[data-experience-scroll-up]'));
+    const experienceScrollDownButtons = Array.from(section.querySelectorAll('[data-experience-scroll-down]'));
     const accordionItems = Array.from(section.querySelectorAll('[data-accordion-item]'));
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -172,12 +188,45 @@ const hasScrollableExperience = experienceItems.length > 4;
       wrapper.dataset.scrollState = !hasOverflow ? 'none' : isAtTop ? 'top' : isAtBottom ? 'bottom' : 'middle';
     };
 
+    const jumpExperienceScroll = (scrollArea: HTMLElement, direction: 'top' | 'bottom') => {
+      const targetTop = direction === 'top' ? 0 : scrollArea.scrollHeight;
+      const targetTab = direction === 'top' ? experienceTabs[0] : experienceTabs[experienceTabs.length - 1];
+
+      scrollArea.scrollTo({
+        top: targetTop,
+        behavior: motionQuery.matches ? 'auto' : 'smooth',
+      });
+
+      if (targetTab instanceof HTMLElement) {
+        targetTab.focus({ preventScroll: true });
+        activateExperience(targetTab);
+        targetTab.scrollIntoView({
+          block: direction === 'top' ? 'start' : 'end',
+          behavior: motionQuery.matches ? 'auto' : 'smooth',
+        });
+      }
+    };
+
     experienceScrollAreas.forEach((scrollArea) => {
       if (!(scrollArea instanceof HTMLElement)) return;
 
       updateExperienceScrollState(scrollArea);
       scrollArea.addEventListener('scroll', () => updateExperienceScrollState(scrollArea), { passive: true });
       window.addEventListener('resize', () => updateExperienceScrollState(scrollArea));
+    });
+
+    experienceScrollUpButtons.forEach((button, index) => {
+      const scrollArea = experienceScrollAreas[index];
+      if (!(button instanceof HTMLButtonElement) || !(scrollArea instanceof HTMLElement)) return;
+
+      button.addEventListener('click', () => jumpExperienceScroll(scrollArea, 'top'));
+    });
+
+    experienceScrollDownButtons.forEach((button, index) => {
+      const scrollArea = experienceScrollAreas[index];
+      if (!(button instanceof HTMLButtonElement) || !(scrollArea instanceof HTMLElement)) return;
+
+      button.addEventListener('click', () => jumpExperienceScroll(scrollArea, 'bottom'));
     });
 
     const setAccordionItem = (item: Element | HTMLElement, open: boolean) => {

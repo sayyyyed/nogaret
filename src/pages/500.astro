@@ -1,0 +1,14 @@
+---
+import ErrorState from '../components/content/ErrorState.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Server error" description="The server could not complete this request." hideFooter>
+  <ErrorState
+    code="500"
+    title="Something broke while loading."
+    description="The request reached the site, but the page could not finish rendering. Head back home and try again in a moment."
+    secondaryLabel="Open contact"
+    secondaryHref="/contact/"
+  />
+</BaseLayout>

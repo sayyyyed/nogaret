@@ -68,20 +68,10 @@ export const education = {
         'Aamir, S. (2025). Text Summarization Umpan Balik Pengguna Website SiBayar dengan metode Bidirectional Long Short-Term Memory (BiLSTM). Skripsi. UIN Maulana Malik Ibrahim Malang.',
     },
     {
-      title: 'Another Publication Title Example',
-      url: '#',
-      citation: 'Aamir, S. (2025). Another Publication Title Example. Jurnal Ilmiah Komputer.',
-    },
-    {
-      title: 'Another Publication Title Example',
-      url: '#',
-      citation: 'Aamir, S. (2025). Another Publication Title Example. Jurnal Ilmiah Komputer.',
-    },
-    {
-      title: 'Another Publication Title Example',
-      url: '#',
-      citation: 'Aamir, S. (2025). Another Publication Title Example. Jurnal Ilmiah Komputer.',
-    },
+      title: 'Enhancing Historical Narrative through Application of Staging Techniques in 3D Animation “How Islam Spread Around the World',
+      url: 'https://jurnal.atmaluhur.ac.id/index.php/sisfokom/article/view/1812',
+      citation: 'J. N. Fadila, S. A. Hassan, M. H. Arkan, D. F. B. Indaru, and S. M. C. Diano, “Enhancing Historical Narrative through Application of Staging Techniques in 3D Animation ‘How Islam Spread Around the World’”, SISFOKOM, vol. 13, no. 1, pp. 7–12, Feb. 2024.',
+    }
   ],
 };
 
