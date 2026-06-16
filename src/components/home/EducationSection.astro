@@ -1,0 +1,39 @@
+---
+import { education } from '../../data/home';
+---
+
+<section class="pb-20 md:pb-24" aria-labelledby="education-title">
+  <div class="mb-6 max-w-2xl">
+    <p class="eyebrow">Study log</p>
+    <h2 id="education-title" class="m-0 text-2xl font-extrabold leading-tight tracking-normal text-[var(--ink)] md:text-3xl">
+      Education
+    </h2>
+  </div>
+  <div class="max-w-3xl text-[var(--body)]">
+    <h3 class="m-0 text-xl font-extrabold leading-tight text-[var(--ink)]">{education.school}</h3>
+    <p class="m-0 mt-1 text-sm leading-[1.71] text-[var(--mute)]">
+      {education.period} / {education.gpa}
+    </p>
+    <div class="mt-5 flex flex-col gap-4">
+      {education.publications.map((pub) => (
+        <div>
+          <a
+            class="group relative inline-flex items-baseline gap-1.5 text-[15px] font-semibold leading-[1.71] !text-[var(--link-teal)] no-underline hover:!text-[var(--link-teal)] focus-visible:!text-[var(--link-teal)]"
+            href={pub.url}
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <span class="border-b border-transparent transition-[border-color,font-weight] duration-300 ease-[var(--motion)] group-hover:border-current group-hover:font-extrabold group-focus-visible:border-current group-focus-visible:font-extrabold">{pub.title}</span>
+            <span class="inline-block transition-transform duration-300 ease-[var(--motion)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-focus-visible:translate-x-0.5 group-focus-visible:-translate-y-0.5" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="7" y1="17" x2="17" y2="7" />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+            </span>
+            <span class="pointer-events-none invisible absolute bottom-[calc(100%+8px)] left-1/2 z-20 w-max max-w-[300px] -translate-x-1/2 translate-y-1 text-pretty rounded-md bg-[var(--ink)] px-4 py-3 text-[11px] font-medium leading-normal text-white opacity-0 transition-[opacity,transform,visibility] duration-300 ease-[var(--motion)] group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:visible group-focus-visible:translate-y-0 group-focus-visible:opacity-100 max-md:left-0 max-md:translate-x-0 max-md:group-hover:translate-x-0 max-md:group-focus-visible:translate-x-0" role="tooltip">{pub.citation}</span>
+          </a>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

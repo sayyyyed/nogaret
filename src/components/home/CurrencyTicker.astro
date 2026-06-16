@@ -1,0 +1,21 @@
+---
+import { currencies } from '../../data/home';
+---
+
+<section class="interstitial-marquee" aria-label="Currency ticker">
+  <div class="marquee-track" data-marquee-track>
+    {[0, 1].map(() => (
+      <div class="marquee-content" aria-hidden="true">
+        {[...currencies, ...currencies, ...currencies].map((item) => (
+          <span class="marquee-item">
+            <span class="currency-pair">{item.pair}</span>
+            <span class="currency-rate">{item.rate}</span>
+            <span class={`currency-diff ${item.up ? 'diff-up' : 'diff-down'}`}>
+              {item.up ? '\u2191' : '\u2193'} {item.diff}
+            </span>
+          </span>
+        ))}
+      </div>
+    ))}
+  </div>
+</section>

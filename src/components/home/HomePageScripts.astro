@@ -1,0 +1,158 @@
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  async function fetchRatesAndUpdate() {
+    try {
+      const symbols = ['USD', 'SGD', 'HKD', 'JPY', 'EUR', 'GBP', 'AUD'];
+      const dateObj = new Date();
+      dateObj.setDate(dateObj.getDate() - 7);
+      const startDate = dateObj.toISOString().split('T')[0];
+
+      const res = await fetch(`https://api.frankfurter.dev/v1/${startDate}..?symbols=IDR,USD,SGD,HKD,JPY,GBP,AUD`);
+      const data = await res.json();
+
+      const dates = Object.keys(data.rates).sort();
+      if (dates.length < 2) return;
+
+      const latestDate = dates[dates.length - 1];
+      const prevDate = dates[dates.length - 2];
+
+      const latestRates = data.rates[latestDate];
+      const prevRates = data.rates[prevDate];
+      latestRates.EUR = 1;
+      prevRates.EUR = 1;
+
+      const items = [...symbols, ...symbols, ...symbols];
+      const html = items.map((sym) => {
+        const rateLatest = latestRates.IDR / latestRates[sym];
+        const ratePrev = prevRates.IDR / prevRates[sym];
+        const diff = rateLatest - ratePrev;
+        const up = diff >= 0;
+        return `<span class="marquee-item">
+          <span class="currency-pair">${sym}/IDR</span>
+          <span class="currency-rate">${rateLatest.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+          <span class="currency-diff ${up ? 'diff-up' : 'diff-down'}">
+            ${up ? '&uarr;' : '&darr;'} ${Math.abs(diff).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </span>
+        </span>`;
+      }).join('');
+
+      document.querySelectorAll('.marquee-content').forEach((el) => {
+        el.innerHTML = html;
+      });
+    } catch (err) {
+      console.error('Frankfurter API fetch failed:', err);
+    }
+  }
+
+  fetchRatesAndUpdate();
+
+  if (!motionQuery.matches) {
+    const track = document.querySelector('[data-marquee-track]');
+    if (track) {
+      const contents = track.querySelectorAll('.marquee-content');
+      if (contents.length >= 2) {
+        gsap.set(contents, { xPercent: 0 });
+
+        const tl = gsap.timeline({ repeat: -1 });
+        tl.to(contents, {
+          xPercent: -100,
+          duration: 40,
+          ease: 'none',
+        });
+
+        ScrollTrigger.create({
+          trigger: track,
+          start: 'top bottom',
+          end: 'bottom top',
+          onUpdate: (self) => {
+            const velocity = Math.abs(self.getVelocity()) / 1000;
+            const speedMultiplier = 1 + Math.min(velocity * 0.5, 4);
+            tl.timeScale(speedMultiplier);
+          },
+          onLeave: () => {
+            tl.timeScale(1);
+          },
+          onLeaveBack: () => {
+            tl.timeScale(1);
+          },
+        });
+
+        track.addEventListener('mouseenter', () => tl.pause());
+        track.addEventListener('mouseleave', () => tl.play());
+      }
+    }
+  }
+
+  const bentoNotes = document.querySelectorAll('.home-note');
+  bentoNotes.forEach((note, i) => {
+    const arrow = note.querySelector('.bento-arrow');
+    const svg = arrow?.querySelector('svg');
+    const h2 = note.querySelector('h2');
+    const p = note.querySelector('p');
+    const span = note.querySelector('span');
+    const mascot = note.querySelector('.mascot-svg path[fill="#f7a501"]');
+
+    if (!arrow || !svg) return;
+
+    gsap.set(arrow, { scale: 0.8, autoAlpha: 0, x: -15, y: 15 });
+
+    const tlNote = gsap.timeline({ paused: true, defaults: { ease: 'back.out(1.7)', duration: 0.4 } });
+    const tilt = i % 2 === 0 ? 1.5 : -1.5;
+
+    tlNote.to(note, { backgroundColor: 'var(--primary)', borderColor: 'var(--primary)', rotation: tilt, scale: 1.02, color: 'var(--ink)' }, 0)
+      .to([h2, p, span], { color: 'var(--ink)' }, 0)
+      .to(arrow, { scale: 1, autoAlpha: 1, backgroundColor: 'var(--ink)', color: 'var(--primary)', x: 0, y: 0 }, 0);
+
+    if (mascot) {
+      tlNote.to(mascot, { fill: '#ffffff' }, 0);
+    }
+
+    note.addEventListener('mouseenter', () => tlNote.play());
+    note.addEventListener('mouseleave', () => tlNote.reverse());
+    note.addEventListener('focus', () => tlNote.play());
+    note.addEventListener('blur', () => tlNote.reverse());
+
+    const tlArrow = gsap.timeline({ paused: true, defaults: { ease: 'power2.out', duration: 0.2 } });
+    tlArrow.to(arrow, { scale: 1.25, rotation: 15, backgroundColor: '#ffffff', color: 'var(--ink)' });
+
+    arrow.addEventListener('mouseenter', () => tlArrow.play());
+    arrow.addEventListener('mouseleave', () => tlArrow.reverse());
+  });
+
+  if (!motionQuery.matches) {
+    const contactHero = document.querySelector('.contact-hero');
+    if (contactHero) {
+      gsap.from(contactHero.querySelector('.contact-hero-header'), {
+        scrollTrigger: {
+          trigger: contactHero,
+          start: 'top 85%',
+          once: true,
+        },
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power4.out',
+      });
+
+      gsap.from(contactHero.querySelector('[data-contact-composer]'), {
+        scrollTrigger: {
+          trigger: contactHero,
+          start: 'top 75%',
+          once: true,
+        },
+        y: 60,
+        opacity: 0,
+        duration: 0.9,
+        delay: 0.15,
+        ease: 'power4.out',
+      });
+    }
+  }
+
+</script>

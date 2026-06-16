@@ -1,0 +1,240 @@
+---
+import { experienceItems } from '../../data/home';
+
+const hasScrollableExperience = experienceItems.length > 4;
+---
+
+<section class="py-20 md:py-24" aria-labelledby="experience-title" data-experience-section>
+  <div class="mb-6 max-w-2xl">
+    <p class="eyebrow">Work notes</p>
+    <h2 id="experience-title" class="m-0 text-2xl font-extrabold leading-tight tracking-normal text-[var(--ink)] md:text-3xl">
+      Experience
+    </h2>
+  </div>
+
+  <div class="experience-desktop-grid grid gap-4 lg:grid-cols-[240px_minmax(0,1fr)]">
+    <aside class="doc-sidebar-panel" aria-label="Experience navigation">
+      <div class={`experience-sidebar-scroll ${hasScrollableExperience ? 'is-scrollable' : ''}`} data-experience-scroll-wrap>
+        {hasScrollableExperience && (
+          <span class="experience-scroll-arrow experience-scroll-arrow-up" aria-hidden="true" data-experience-scroll-up>&uarr;</span>
+        )}
+        <div class="experience-tab-list flex gap-2 overflow-x-auto pb-1 lg:grid lg:overflow-visible lg:pb-0" role="tablist" aria-orientation="vertical" data-experience-scroll>
+          {experienceItems.map((item, index) => (
+            <button
+              class="experience-tab group/experience min-w-[210px] rounded-md border border-[var(--hairline)] bg-gray-50 p-3 text-left text-sm text-[var(--body)] transition-[background-color,border-color,color,transform] duration-500 ease-[var(--motion)] hover:-translate-y-0.5 hover:bg-white focus-visible:-translate-y-0.5 aria-selected:border-[color-mix(in_srgb,var(--primary),var(--ink)_18%)] aria-selected:bg-[var(--primary)] aria-selected:text-[var(--ink)] lg:min-w-0"
+              type="button"
+              role="tab"
+              id={`tab-${item.id}`}
+              aria-controls={`panel-${item.id}`}
+              aria-selected={index === 0 ? 'true' : 'false'}
+              tabindex={index === 0 ? '0' : '-1'}
+              data-experience-tab={item.id}
+            >
+              <span class="block text-xs font-bold uppercase leading-tight text-[var(--mute)] group-aria-selected/experience:text-[var(--ink)]">{item.period}</span>
+              <span class="mt-1 block font-bold leading-snug text-[var(--ink)]">{item.role}</span>
+              <span class="mt-0.5 block text-xs leading-snug text-[var(--body)] group-aria-selected/experience:text-[var(--ink)]">{item.place}</span>
+            </button>
+          ))}
+        </div>
+        {hasScrollableExperience && (
+          <span class="experience-scroll-arrow experience-scroll-arrow-down" aria-hidden="true" data-experience-scroll-down>&darr;</span>
+        )}
+      </div>
+    </aside>
+
+    <div class="doc-experience-card min-h-[360px] animate-[reveal-up_900ms_var(--motion)_both] rounded-md border border-[var(--hairline)] bg-[var(--surface-doc)] p-6">
+      {experienceItems.map((item, index) => (
+        <article
+          class="experience-panel"
+          id={`panel-${item.id}`}
+          role="tabpanel"
+          aria-labelledby={`tab-${item.id}`}
+          hidden={index !== 0}
+          data-experience-panel={item.id}
+        >
+          <p class="eyebrow">{item.period}</p>
+          <h3 class="m-0 text-2xl font-extrabold leading-tight text-[var(--ink)]">{item.role}</h3>
+          <p class="m-0 mt-1 text-sm font-semibold text-[var(--mute)]">{item.place}</p>
+          <p class="mt-5 max-w-3xl text-[15px] leading-[1.71] text-[var(--body)]">{item.summary}</p>
+          <div class="mt-5 rounded-md bg-[var(--surface-dark)] p-4 font-mono text-sm leading-relaxed text-white">
+            <span class="text-[var(--primary)]">work.note</span> = [
+            {item.points.map((point) => (
+              <span class="block pl-4">"{point}",</span>
+            ))}
+            ]
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+
+  <div class="experience-accordion" data-experience-accordion>
+    {experienceItems.map((item, index) => (
+      <article class="experience-accordion-item rounded-lg border border-[var(--hairline)] bg-[var(--surface-card)] transition-[background-color,border-color,transform] duration-500 ease-[var(--motion)] data-[open=true]:border-[color-mix(in_srgb,var(--primary),var(--ink)_18%)] data-[open=true]:bg-[var(--surface-doc)]" data-accordion-item>
+        <button
+          class="experience-accordion-trigger grid min-h-[72px] w-full cursor-pointer grid-cols-[minmax(0,1fr)_34px] items-start gap-y-0.5 border-0 bg-transparent p-4 text-left text-[var(--ink)] hover:bg-[var(--surface-soft)] focus-visible:bg-[var(--surface-soft)] active:scale-[0.99]"
+          type="button"
+          id={`accordion-trigger-${item.id}`}
+          aria-expanded={index === 0 ? 'true' : 'false'}
+          aria-controls={`accordion-panel-${item.id}`}
+          data-accordion-trigger
+        >
+          <span class="experience-accordion-meta col-start-1 min-w-0 text-[11px] font-bold uppercase leading-tight text-[var(--mute)]">{item.period}</span>
+          <span class="experience-accordion-title col-start-1 min-w-0 break-words text-base font-extrabold leading-snug text-[var(--ink)]">{item.role}</span>
+          <span class="experience-accordion-place col-start-1 min-w-0 break-words text-[13px] leading-snug text-[var(--body)]">{item.place}</span>
+          <span class="experience-accordion-icon col-start-2 row-span-3 row-start-1 h-[34px] w-[34px] self-center justify-self-end rounded-full border border-[var(--hairline-soft)] bg-[linear-gradient(var(--ink),var(--ink))_center/12px_2px_no-repeat,linear-gradient(var(--ink),var(--ink))_center/2px_12px_no-repeat,var(--surface-soft)] transition-[background-color,transform] duration-500 ease-[var(--motion)]" aria-hidden="true"></span>
+        </button>
+        <div
+          class="experience-accordion-panel"
+          id={`accordion-panel-${item.id}`}
+          role="region"
+          aria-labelledby={`accordion-trigger-${item.id}`}
+          data-accordion-panel
+        >
+          <div class="experience-accordion-content border-t border-[var(--hairline-soft)] px-4 pb-4">
+            <p>{item.summary}</p>
+            <div class="experience-code-block">
+              <span>work.note</span> = [
+              {item.points.map((point) => (
+                <span class="block pl-4">"{point}",</span>
+              ))}
+              ]
+            </div>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const section = document.querySelector('[data-experience-section]');
+
+  if (section) {
+    const experienceTabs = Array.from(section.querySelectorAll('[data-experience-tab]'));
+    const experiencePanels = Array.from(section.querySelectorAll('[data-experience-panel]'));
+    const experienceScrollAreas = Array.from(section.querySelectorAll('[data-experience-scroll]'));
+    const accordionItems = Array.from(section.querySelectorAll('[data-accordion-item]'));
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const activateExperience = (activeTab: Element) => {
+      const activeId = activeTab.getAttribute('data-experience-tab');
+      if (!activeId) return;
+
+      experienceTabs.forEach((tab) => {
+        const selected = tab === activeTab;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.setAttribute('tabindex', selected ? '0' : '-1');
+      });
+
+      experiencePanels.forEach((panel) => {
+        if (panel instanceof HTMLElement) {
+          const selected = panel.getAttribute('data-experience-panel') === activeId;
+          panel.hidden = !selected;
+        }
+      });
+    };
+
+    experienceTabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => activateExperience(tab));
+      tab.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
+
+        event.preventDefault();
+        const direction = event.key === 'ArrowDown' || event.key === 'ArrowRight' ? 1 : -1;
+        const nextIndex = event.key === 'Home'
+          ? 0
+          : event.key === 'End'
+            ? experienceTabs.length - 1
+            : (index + direction + experienceTabs.length) % experienceTabs.length;
+        const nextTab = experienceTabs[nextIndex];
+
+        if (nextTab instanceof HTMLElement) {
+          nextTab.focus();
+          activateExperience(nextTab);
+        }
+      });
+    });
+
+    const updateExperienceScrollState = (scrollArea: HTMLElement | Element) => {
+      if (!(scrollArea instanceof HTMLElement)) return;
+
+      const wrapper = scrollArea.closest('[data-experience-scroll-wrap]');
+      if (!(wrapper instanceof HTMLElement)) return;
+
+      const maxScroll = scrollArea.scrollHeight - scrollArea.clientHeight;
+      const hasOverflow = maxScroll > 1;
+      const isAtTop = scrollArea.scrollTop <= 1;
+      const isAtBottom = scrollArea.scrollTop >= maxScroll - 1;
+
+      wrapper.dataset.scrollState = !hasOverflow ? 'none' : isAtTop ? 'top' : isAtBottom ? 'bottom' : 'middle';
+    };
+
+    experienceScrollAreas.forEach((scrollArea) => {
+      if (!(scrollArea instanceof HTMLElement)) return;
+
+      updateExperienceScrollState(scrollArea);
+      scrollArea.addEventListener('scroll', () => updateExperienceScrollState(scrollArea), { passive: true });
+      window.addEventListener('resize', () => updateExperienceScrollState(scrollArea));
+    });
+
+    const setAccordionItem = (item: Element | HTMLElement, open: boolean) => {
+      const trigger = item.querySelector('[data-accordion-trigger]');
+      const panel = item.querySelector('[data-accordion-panel]');
+      const icon = item.querySelector('.experience-accordion-icon');
+
+      if (!(trigger instanceof HTMLButtonElement) || !(panel instanceof HTMLElement)) return;
+
+      trigger.setAttribute('aria-expanded', String(open));
+      item.setAttribute('data-open', String(open));
+      icon?.classList.toggle('rotate-180', open);
+      icon?.classList.toggle('!border-[color-mix(in_srgb,var(--primary),var(--ink)_18%)]', open);
+      icon?.classList.toggle('!bg-[linear-gradient(var(--ink),var(--ink))_center/12px_2px_no-repeat,var(--primary)]', open);
+
+      if (motionQuery.matches) {
+        panel.style.height = open ? 'auto' : '0px';
+        panel.style.opacity = open ? '1' : '0';
+        return;
+      }
+
+      gsap.killTweensOf(panel);
+
+      if (open) {
+        panel.style.height = 'auto';
+        const targetHeight = panel.offsetHeight;
+        panel.style.height = '0px';
+        gsap.to(panel, {
+          duration: 0.44,
+          ease: 'power4.out',
+          height: targetHeight,
+          opacity: 1,
+          onComplete: () => {
+            panel.style.height = 'auto';
+          },
+        });
+        return;
+      }
+
+      gsap.to(panel, {
+        duration: 0.32,
+        ease: 'power3.inOut',
+        height: 0,
+        opacity: 0,
+      });
+    };
+
+    accordionItems.forEach((item, index) => {
+      setAccordionItem(item, index === 0);
+
+      const trigger = item.querySelector('[data-accordion-trigger]');
+      if (!(trigger instanceof HTMLButtonElement)) return;
+
+      trigger.addEventListener('click', () => {
+        const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+        accordionItems.forEach((accordionItem) => setAccordionItem(accordionItem, accordionItem === item ? !isOpen : false));
+      });
+    });
+  }
+</script>

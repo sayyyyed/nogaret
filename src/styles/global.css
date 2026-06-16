@@ -611,25 +611,6 @@ main {
   position: relative;
 }
 
-.experience-tab[aria-selected="true"] {
-  background: var(--primary);
-  border-color: color-mix(in srgb, var(--primary), var(--ink) 18%);
-  color: var(--ink);
-}
-
-.experience-tab[aria-selected="true"] * {
-  color: var(--ink);
-}
-
-.doc-experience-card {
-  animation: reveal-up 900ms var(--motion) both;
-  background: var(--surface-doc);
-  border: 1px solid var(--hairline);
-  border-radius: 6px;
-  min-height: 360px;
-  padding: 1.5rem;
-}
-
 .experience-accordion {
   display: none;
 }
@@ -1282,96 +1263,6 @@ main {
   .marquee-item {
     font-size: 1rem;
     margin-right: 2rem;
-  }
-}
-
-/* ==========================================================================
-   Education Thesis Link
-   ========================================================================== */
-
-.thesis-link {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.35rem;
-  color: var(--link-teal);
-  text-decoration: none;
-  font-size: 15px;
-  line-height: 1.71;
-  font-weight: 600;
-  position: relative;
-}
-
-.thesis-link-text {
-  border-bottom: 1px solid transparent;
-  transition: border-color 300ms var(--motion);
-}
-
-.thesis-link:hover .thesis-link-text {
-  border-color: currentColor;
-  font-weight: 800;
-}
-
-.thesis-link-arrow {
-  display: inline-block;
-  transition: transform 300ms var(--motion);
-}
-
-.thesis-link:hover .thesis-link-arrow {
-  transform: translate(2px, -2px);
-}
-
-/* Tooltip (CSS only for now) */
-.thesis-tooltip {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  width: max-content;
-  max-width: 300px;
-  background: var(--ink);
-  color: white;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  font-size: 11px;
-  line-height: 1.5;
-  font-weight: 500;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 300ms var(--motion), transform 300ms var(--motion), visibility 300ms;
-  z-index: 20;
-  text-wrap: pretty;
-  box-shadow: 0 10px 25px rgba(35, 37, 29, 0.2);
-}
-
-.thesis-tooltip::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 6px;
-  border-style: solid;
-  border-color: var(--ink) transparent transparent transparent;
-}
-
-.thesis-link:hover .thesis-tooltip,
-.thesis-link:focus-visible .thesis-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) translateY(0);
-}
-
-@media (max-width: 768px) {
-  .thesis-tooltip {
-    left: 0;
-    transform: translateX(0) translateY(4px);
-  }
-  .thesis-tooltip::after {
-    left: 20px;
-  }
-  .thesis-link:hover .thesis-tooltip,
-  .thesis-link:focus-visible .thesis-tooltip {
-    transform: translateX(0) translateY(0);
   }
 }
 
