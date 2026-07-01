@@ -16,9 +16,35 @@ const tokenCodes = [115, 105, 97, 104, 111, 107, 100, 117, 114, 106, 97, 110, 97
     <title>Admin Dashboard</title>
   </head>
   <body class="font-sans antialiased min-h-screen overflow-hidden">
-    <div id="admin-shell" data-codes={JSON.stringify(tokenCodes)} class="h-screen w-full">
+    <div id="admin-shell" data-codes={JSON.stringify(tokenCodes)} class="h-screen w-full relative">
+      
+      <!-- Error 666 View (Magic Word Gate) -->
+      <div id="admin-666" class="absolute inset-0 bg-black flex flex-col items-center justify-center p-6 z-[100] font-mono text-red-500 will-change-transform">
+        <div class="max-w-2xl w-full flex flex-col gap-6">
+          <h1 class="text-6xl md:text-8xl font-black tracking-tighter blink-text">ERROR 666</h1>
+          <div class="text-xl md:text-3xl font-bold uppercase tracking-widest border-y-2 border-red-500 py-4">
+            Access Denied
+          </div>
+          <p class="text-lg md:text-xl opacity-80">
+            You are attempting to access a restricted area without proper clearance.
+          </p>
+          <div class="mt-8">
+            <span class="text-red-700">SYSTEM MESSAGE:</span><br/>
+            You didn't say the magic word.
+          </div>
+          
+          <div class="mt-12 text-sm text-red-800 opacity-60">
+            Waiting for input...
+            <span class="inline-block w-2 h-5 bg-red-800 ml-1 animate-pulse"></span>
+          </div>
+          
+          <!-- Mobile fallback input (hidden visually but focusable for mobile keyboards) -->
+          <input type="text" id="magic-word-input" class="absolute opacity-0 pointer-events-none" aria-label="Hidden magic word input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+        </div>
+      </div>
+
       <!-- Login View -->
-      <div id="admin-login" class="flex h-full w-full items-center justify-center px-6 py-8">
+      <div id="admin-login" style="display:none" class="flex h-full w-full items-center justify-center px-6 py-8 absolute inset-0 z-[50]">
         <div id="admin-card" class="w-full max-w-md rounded-lg border border-[#4d4f46] bg-[#23251d] p-8 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] will-change-transform">
           <div class="admin-card-header mb-8 flex flex-col items-center gap-3 text-center">
             <div class="flex h-14 w-14 items-center justify-center rounded-full border border-[#f7a501]/30 bg-[#f7a501]/15 text-[#f7a501]" aria-hidden="true">
@@ -73,12 +99,8 @@ const tokenCodes = [115, 105, 97, 104, 111, 107, 100, 117, 114, 106, 97, 110, 97
       </div>
 
       <!-- Dashboard View (React Component) -->
-      <div id="admin-app" style="display:none" class="h-full w-full">
-        {/* We use client:only so the component renders exclusively on the client, maintaining state properly */}
-        <AdminDashboard client:only="react" onLogout={() => {
-          sessionStorage.removeItem('adm_sn');
-          window.location.reload();
-        }} />
+      <div id="admin-app" style="display:none" class="h-full w-full absolute inset-0 z-10">
+        <AdminDashboard client:only="react" />
       </div>
     </div>
 
@@ -99,6 +121,15 @@ const tokenCodes = [115, 105, 97, 104, 111, 107, 100, 117, 114, 106, 97, 110, 97
         opacity: 1;
         padding: 0.5rem 0.75rem;
       }
+      
+      .blink-text {
+        animation: blink 2s step-end infinite;
+      }
+      
+      @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+      }
     </style>
 
     <script>
@@ -116,13 +147,21 @@ const tokenCodes = [115, 105, 97, 104, 111, 107, 100, 117, 114, 106, 97, 110, 97
         const submitSpinner = submitBtn?.querySelector('.admin-submit-spinner') as HTMLElement | null;
         const errorEl = document.getElementById('admin-error') as HTMLParagraphElement | null;
         const card = document.getElementById('admin-card');
+        
+        const error666View = document.getElementById('admin-666');
         const loginView = document.getElementById('admin-login');
         const appView = document.getElementById('admin-app');
+        
         const eyeBtn = document.getElementById('admin-eye') as HTMLButtonElement | null;
         const eyeOpen = eyeBtn?.querySelector('.eye-open') as SVGElement | null;
         const eyeClosed = eyeBtn?.querySelector('.eye-closed') as SVGElement | null;
+        
+        const mobileInput = document.getElementById('magic-word-input') as HTMLInputElement | null;
 
         const KEY = 'adm_sn';
+        const MAGIC_KEY = 'adm_magic';
+        const MAGIC_WORD = 'jancoktaiasu';
+        
         const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
         function decode(arr: number[]): string {
@@ -132,23 +171,47 @@ const tokenCodes = [115, 105, 97, 104, 111, 107, 100, 117, 114, 106, 97, 110, 97
         }
 
         function isAuthed(): boolean {
-          try {
-            return sessionStorage.getItem(KEY) === '1';
-          } catch {
-            return false;
-          }
+          try { return sessionStorage.getItem(KEY) === '1'; } catch { return false; }
         }
 
         function setAuthed(): void {
-          try {
-            sessionStorage.setItem(KEY, '1');
-          } catch {}
+          try { sessionStorage.setItem(KEY, '1'); } catch {}
+        }
+        
+        function hasMagicWord(): boolean {
+          try { return sessionStorage.getItem(MAGIC_KEY) === '1'; } catch { return false; }
+        }
+        
+        function setMagicWord(): void {
+          try { sessionStorage.setItem(MAGIC_KEY, '1'); } catch {}
         }
 
         function showApp(): void {
-          if (!loginView || !appView) return;
+          if (!loginView || !appView || !error666View) return;
+          error666View.style.display = 'none';
           loginView.style.display = 'none';
           appView.style.display = 'block';
+        }
+        
+        function showLogin(animate = false): void {
+          if (!loginView || !error666View) return;
+          error666View.style.display = 'none';
+          loginView.style.display = 'flex';
+          
+          if (animate && !motionQuery.matches && card) {
+            gsap.from(card, {
+              y: 40, opacity: 0, duration: 0.7, ease: 'power4.out',
+            });
+            gsap.from(card.querySelectorAll('.admin-card-header > *'), {
+              y: 15, opacity: 0, duration: 0.5, stagger: 0.08, delay: 0.2, ease: 'power3.out',
+            });
+            gsap.from(form, {
+              y: 15, opacity: 0, duration: 0.5, delay: 0.4, ease: 'power3.out',
+            });
+            gsap.from(card.querySelector('.admin-back-link'), {
+              opacity: 0, duration: 0.4, delay: 0.55, ease: 'power2.out',
+            });
+          }
         }
 
         function shakeCard(): void {
@@ -186,6 +249,7 @@ const tokenCodes = [115, 105, 97, 104, 111, 107, 100, 117, 114, 106, 97, 110, 97
           }
         }
 
+        // Login Logic
         form?.addEventListener('submit', (e) => {
           e.preventDefault();
           if (!input) return;
@@ -232,41 +296,67 @@ const tokenCodes = [115, 105, 97, 104, 111, 107, 100, 117, 114, 106, 97, 110, 97
             eyeClosed.style.display = 'none';
           }
         });
+        
+        // Magic Word Logic
+        let keystrokes = '';
+        const handleKeystroke = (e: KeyboardEvent) => {
+          if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+            keystrokes += e.key.toLowerCase();
+            if (keystrokes.length > MAGIC_WORD.length * 2) {
+              keystrokes = keystrokes.slice(-MAGIC_WORD.length);
+            }
+            if (keystrokes.endsWith(MAGIC_WORD)) {
+              grantMagicAccess();
+            }
+          }
+        };
+        
+        const grantMagicAccess = () => {
+          window.removeEventListener('keydown', handleKeystroke);
+          setMagicWord();
+          if (error666View) {
+            if (!motionQuery.matches) {
+              gsap.to(error666View, { 
+                opacity: 0, 
+                scale: 1.1,
+                filter: 'blur(10px)',
+                duration: 0.8, 
+                ease: 'power2.inOut',
+                onComplete: () => showLogin(true)
+              });
+            } else {
+              showLogin(true);
+            }
+          }
+        };
 
-        // Check existing session
+        // Determine Initial State
         if (isAuthed()) {
           showApp();
+        } else if (hasMagicWord()) {
+          showLogin(true);
         } else {
-          input?.focus();
-          // Entrance animation
-          if (!motionQuery.matches && card) {
-            gsap.from(card, {
-              y: 40,
-              opacity: 0,
-              duration: 0.7,
-              ease: 'power4.out',
-            });
-            gsap.from(card.querySelectorAll('.admin-card-header > *'), {
-              y: 15,
-              opacity: 0,
-              duration: 0.5,
-              stagger: 0.08,
-              delay: 0.2,
-              ease: 'power3.out',
-            });
-            gsap.from(form, {
-              y: 15,
-              opacity: 0,
-              duration: 0.5,
-              delay: 0.4,
-              ease: 'power3.out',
-            });
-            gsap.from(card.querySelector('.admin-back-link'), {
-              opacity: 0,
-              duration: 0.4,
-              delay: 0.55,
-              ease: 'power2.out',
-            });
+          // Show 666 Error and listen for magic word
+          if (error666View) {
+            error666View.style.display = 'flex';
+            window.addEventListener('keydown', handleKeystroke);
+            
+            // Mobile support: listen to the hidden input
+            if (mobileInput) {
+              error666View.addEventListener('click', () => mobileInput.focus());
+              mobileInput.addEventListener('input', (e) => {
+                const val = (e.target as HTMLInputElement).value.toLowerCase();
+                if (val.includes(MAGIC_WORD)) {
+                  grantMagicAccess();
+                }
+              });
+            }
+            
+            // Check query param as fallback
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('word') === MAGIC_WORD) {
+              grantMagicAccess();
+            }
           }
         }
       }

@@ -52,7 +52,7 @@ function ConfirmModal({ isOpen, title, message, onConfirm, onCancel, confirmText
 
 // ── Main Dashboard ──
 
-export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
+export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'blog' | 'notes' | 'research'>('projects');
   const [projects, setProjects] = useState<Project[]>([]);
   const [view, setView] = useState<'list' | 'type-select' | 'form'>('list');
@@ -73,6 +73,12 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('adm_sn');
+    sessionStorage.removeItem('adm_magic');
+    window.location.reload();
+  };
 
   const handleSaveProject = (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,13 +122,15 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
-          className="md:hidden fixed inset-0 bg-black/60 z-30 backdrop-blur-sm"
+          className="md:hidden fixed inset-0 bg-black/60 z-40 backdrop-blur-sm"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
-      <aside className={`fixed md:static inset-y-0 left-0 w-[260px] flex-shrink-0 bg-[#23251d] border-r border-[#3a3b34] flex flex-col z-40 transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+      {/* Sidebar - Removed right border on the header so it connects with main topbar seamlessly */}
+      <aside className={`fixed md:static inset-y-0 left-0 w-[260px] flex-shrink-0 bg-[#23251d] flex flex-col z-50 transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+        
+        {/* Sidebar Header - connected seamlessly to topbar (no border-r) */}
         <div className="h-[60px] flex items-center gap-3 px-5 border-b border-[#3a3b34] flex-shrink-0">
           <svg width="24" height="24" viewBox="0 0 48 48" role="img" aria-hidden="true">
             <path d="M9 28c0-9 7-16 17-16 8 0 14 5 14 13 0 8-6 13-15 13H12c-2 0-3-1-3-3v-7Z" fill="#f7a501" />
@@ -132,44 +140,47 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           <span className="text-lg font-bold tracking-tight text-[#eeefe9]">Admin Panel</span>
         </div>
 
-        <nav className="flex-1 overflow-y-auto p-3 flex flex-col gap-1">
-          <div className="text-[11px] font-bold text-[#6c6e63] uppercase tracking-wider px-3 pt-3 pb-1">Menu</div>
-          <NavItem 
-            id="dashboard" 
-            label="Dashboard" 
-            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>}
-          />
-          <NavItem 
-            id="projects" 
-            label="Projects" 
-            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>}
-          />
-          <NavItem 
-            id="blog" 
-            label="Blog Posts" 
-            icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>}
-          />
-          
-          <div className="h-px bg-[#3a3b34] mx-3 my-4"></div>
-          
-          <a href="/" className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-[#9b9c92] hover:bg-[#33342d] hover:text-[#eeefe9] transition-colors">
-            <span className="opacity-70">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </span>
-            Open Site
-          </a>
-        </nav>
+        {/* Sidebar Body - this part has the right border */}
+        <div className="flex-1 overflow-y-auto flex flex-col border-r border-[#3a3b34]">
+          <nav className="flex-1 p-3 flex flex-col gap-1">
+            <div className="text-[11px] font-bold text-[#6c6e63] uppercase tracking-wider px-3 pt-3 pb-1">Menu</div>
+            <NavItem 
+              id="dashboard" 
+              label="Dashboard" 
+              icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>}
+            />
+            <NavItem 
+              id="projects" 
+              label="Projects" 
+              icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>}
+            />
+            <NavItem 
+              id="blog" 
+              label="Blog Posts" 
+              icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>}
+            />
+            
+            <div className="h-px bg-[#3a3b34] mx-3 my-4"></div>
+            
+            <a href="/" className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-[#9b9c92] hover:bg-[#33342d] hover:text-[#eeefe9] transition-colors">
+              <span className="opacity-70">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </span>
+              Open Site
+            </a>
+          </nav>
 
-        <div className="p-3 border-t border-[#3a3b34] shrink-0">
-          <button 
-            onClick={onLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-[#9b9c92] hover:bg-red-500/10 hover:text-[#cd4239] transition-colors"
-          >
-            <span className="opacity-70">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            </span>
-            Logout
-          </button>
+          <div className="p-3 border-t border-[#3a3b34] shrink-0">
+            <button 
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-[#9b9c92] hover:bg-red-500/10 hover:text-[#cd4239] transition-colors"
+            >
+              <span className="opacity-70">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              </span>
+              Logout
+            </button>
+          </div>
         </div>
       </aside>
 
