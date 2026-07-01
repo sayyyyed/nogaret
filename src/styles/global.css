@@ -1843,3 +1843,512 @@ main {
   pointer-events: auto;
   z-index: 30;
 }
+
+/* ==========================================================================
+   Admin Back Access
+   ========================================================================== */
+
+.admin-body {
+  background: var(--surface-dark);
+  color: var(--on-dark);
+  font-family: "IBM Plex Sans", "IBM Plex Sans Variable", -apple-system, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+}
+
+.admin-body::before {
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.04) 0.65px, transparent 0.65px),
+    linear-gradient(rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.015));
+  background-size: 18px 18px, 100% 100%;
+  content: "";
+  inset: 0;
+  opacity: 0.5;
+  pointer-events: none;
+  position: fixed;
+  z-index: 0;
+}
+
+.admin-body > * {
+  position: relative;
+  z-index: 1;
+}
+
+.admin-body ::selection {
+  background: var(--primary);
+  color: var(--ink);
+}
+
+.admin-shell {
+  min-height: 100dvh;
+  width: 100%;
+}
+
+/* ---- Login View ---- */
+
+.admin-login-view {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: 2rem 1.5rem;
+}
+
+.admin-card {
+  background: var(--charcoal);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+  max-width: 420px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  will-change: transform, opacity;
+}
+
+.admin-card-header {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.admin-lock-icon {
+  align-items: center;
+  background: rgba(247, 165, 1, 0.12);
+  border: 1px solid rgba(247, 165, 1, 0.25);
+  border-radius: 50%;
+  color: var(--primary);
+  display: flex;
+  height: 56px;
+  justify-content: center;
+  width: 56px;
+}
+
+.admin-title {
+  color: var(--on-dark);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  line-height: 1.33;
+  margin: 0;
+}
+
+.admin-subtitle {
+  color: var(--ash);
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ---- Form ---- */
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-input-wrap {
+  position: relative;
+}
+
+.admin-input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--on-dark);
+  font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 15px;
+  height: 48px;
+  letter-spacing: 0.05em;
+  outline: none;
+  padding: 0 3rem 0 1rem;
+  transition:
+    background-color 180ms var(--motion),
+    border-color 180ms var(--motion),
+    box-shadow 180ms var(--motion);
+  width: 100%;
+}
+
+.admin-input::placeholder {
+  color: rgba(155, 156, 146, 0.6);
+  font-family: "IBM Plex Sans", "IBM Plex Sans Variable", -apple-system, sans-serif;
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+.admin-input:focus {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(247, 165, 1, 0.2);
+}
+
+.admin-eye-btn {
+  align-items: center;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--ash);
+  cursor: pointer;
+  display: flex;
+  height: 36px;
+  justify-content: center;
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: color 180ms var(--motion), background-color 180ms var(--motion);
+  width: 36px;
+}
+
+.admin-eye-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--on-dark);
+}
+
+.admin-eye-btn:active {
+  transform: translateY(-50%) scale(0.94);
+}
+
+/* ---- Submit Button (3D raised on dark) ---- */
+
+.admin-submit-btn {
+  align-items: center;
+  background: var(--primary);
+  border: 2px solid var(--button-primary-border);
+  border-radius: 8px;
+  border-top-color: var(--button-primary-border-top);
+  box-shadow:
+    0 3px 0 var(--button-primary-shadow),
+    0 4px 0 rgba(0, 0, 0, 0.3);
+  color: var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 800;
+  gap: 0.5rem;
+  justify-content: center;
+  line-height: 1.2;
+  min-height: 48px;
+  padding: 0.68rem 1.25rem;
+  text-decoration: none;
+  transform: translateY(0);
+  transition:
+    background-color 180ms var(--motion),
+    border-color 180ms var(--motion),
+    box-shadow 180ms var(--motion),
+    color 180ms var(--motion),
+    transform 180ms var(--motion);
+  user-select: none;
+  width: 100%;
+}
+
+.admin-submit-btn:hover:not(:disabled) {
+  background: var(--primary);
+  border-color: var(--button-primary-border);
+  border-top-color: var(--button-primary-border-top-hover);
+  box-shadow:
+    0 4px 0 var(--button-primary-shadow-hover),
+    0 5px 0 rgba(0, 0, 0, 0.25);
+  color: var(--ink);
+  transform: translateY(-3px);
+}
+
+.admin-submit-btn:active:not(:disabled) {
+  box-shadow:
+    0 1px 0 var(--button-primary-shadow),
+    0 2px 0 rgba(0, 0, 0, 0.2);
+  transform: translateY(5px);
+}
+
+.admin-submit-btn:disabled {
+  box-shadow:
+    0 2px 0 var(--button-primary-shadow),
+    0 3px 0 rgba(0, 0, 0, 0.15);
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+}
+
+.admin-submit-spinner svg {
+  animation: admin-spin 800ms linear infinite;
+}
+
+@keyframes admin-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- Error Message ---- */
+
+.admin-error {
+  align-items: center;
+  background: rgba(205, 66, 57, 0.12);
+  border: 1px solid rgba(205, 66, 57, 0.3);
+  border-radius: 6px;
+  color: #f7d6d3;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 0;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0 0.75rem;
+  transition:
+    max-height 300ms var(--motion),
+    opacity 300ms var(--motion),
+    padding 300ms var(--motion);
+}
+
+.admin-error.admin-error-show {
+  max-height: 80px;
+  opacity: 1;
+  padding: 0.6rem 0.75rem;
+}
+
+/* ---- Back Link ---- */
+
+.admin-back-link {
+  color: var(--ash);
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 1.5rem;
+  text-align: center;
+  text-decoration: none;
+  transition: color 180ms var(--motion);
+}
+
+.admin-back-link:hover {
+  color: var(--on-dark);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+/* ---- Shake Animation (fallback) ---- */
+
+@keyframes admin-shake {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-10px); }
+  20% { transform: translateX(10px); }
+  30% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  50% { transform: translateX(-4px); }
+  60% { transform: translateX(4px); }
+  70% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+  90% { transform: translateX(0); }
+}
+
+.admin-shake {
+  animation: admin-shake 0.5s ease-in-out;
+}
+
+/* ---- Dashboard View ---- */
+
+.admin-dashboard {
+  min-height: 100dvh;
+}
+
+.admin-dash-header {
+  align-items: center;
+  background: var(--charcoal);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.admin-dash-brand {
+  align-items: center;
+  color: var(--on-dark);
+  display: flex;
+  font-size: 18px;
+  font-weight: 800;
+  gap: 0.6rem;
+  letter-spacing: -0.3px;
+}
+
+.admin-logout-btn {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--on-dark);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 600;
+  gap: 0.4rem;
+  padding: 0.5rem 0.85rem;
+  transition:
+    background-color 180ms var(--motion),
+    border-color 180ms var(--motion),
+    transform 180ms var(--motion);
+}
+
+.admin-logout-btn:hover {
+  background: rgba(205, 66, 57, 0.15);
+  border-color: rgba(205, 66, 57, 0.4);
+  color: #f7d6d3;
+}
+
+.admin-logout-btn:active {
+  transform: scale(0.96);
+}
+
+.admin-dash-body {
+  margin: 0 auto;
+  max-width: 960px;
+  padding: 3rem 1.5rem;
+}
+
+.admin-dash-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.admin-dash-card {
+  background: var(--charcoal);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition:
+    border-color 180ms var(--motion),
+    transform 180ms var(--motion);
+}
+
+.admin-dash-card:hover {
+  border-color: rgba(247, 165, 1, 0.3);
+  transform: translateY(-2px);
+}
+
+.admin-dash-card-eyebrow {
+  color: var(--ash);
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.33;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.admin-dash-card h2 {
+  color: var(--on-dark);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.admin-dash-count {
+  color: var(--primary);
+  font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0.75rem 0 1rem;
+}
+
+.admin-dash-link {
+  color: var(--ash);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 180ms var(--motion);
+}
+
+.admin-dash-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.admin-dash-section {
+  margin-top: 3rem;
+}
+
+.admin-dash-section h3 {
+  color: var(--on-dark);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0 0 1rem;
+}
+
+.admin-dash-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.admin-dash-action-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--on-dark);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0.6rem 1.1rem;
+  text-decoration: none;
+  transition:
+    background-color 180ms var(--motion),
+    border-color 180ms var(--motion),
+    transform 180ms var(--motion);
+}
+
+.admin-dash-action-btn:hover {
+  background: rgba(247, 165, 1, 0.1);
+  border-color: rgba(247, 165, 1, 0.3);
+  color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.admin-dash-action-btn:active {
+  transform: scale(0.97);
+}
+
+/* ---- Admin Responsive ---- */
+
+@media (max-width: 768px) {
+  .admin-dash-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-dash-body {
+    padding: 2rem 1rem;
+  }
+
+  .admin-card {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-dash-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-dash-header {
+    padding: 0.85rem 1rem;
+  }
+
+  .admin-dash-brand {
+    font-size: 16px;
+  }
+}
