@@ -5,6 +5,7 @@
   gsap.registerPlugin(ScrollTrigger);
 
   const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const MAGIC_KEY = 'adm_magic';
 
   // Hidden back-access trigger — char codes, not a plain string
   // "jancoktaiasu" → [106,97,110,99,111,107,116,97,105,97,115,117]
@@ -20,6 +21,9 @@
         if (p.length > b.length) p = p.slice(p.length - b.length);
         if (p === b) {
           p = '';
+          try {
+            sessionStorage.setItem(MAGIC_KEY, '1');
+          } catch {}
           window.location.href = '/admin';
         }
       }

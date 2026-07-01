@@ -163,6 +163,7 @@ const tokenCodes = [115, 105, 97, 104, 111, 107, 100, 117, 114, 106, 97, 110, 97
         const MAGIC_WORD = 'jancoktaiasu';
         
         const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        let magicAccessGranted = false;
 
         function decode(arr: number[]): string {
           let s = '';
@@ -300,6 +301,7 @@ const tokenCodes = [115, 105, 97, 104, 111, 107, 100, 117, 114, 106, 97, 110, 97
         // Magic Word Logic
         let keystrokes = '';
         const handleKeystroke = (e: KeyboardEvent) => {
+          if (magicAccessGranted) return;
           if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
             keystrokes += e.key.toLowerCase();
             if (keystrokes.length > MAGIC_WORD.length * 2) {
@@ -311,8 +313,19 @@ const tokenCodes = [115, 105, 97, 104, 111, 107, 100, 117, 114, 106, 97, 110, 97
           }
         };
         
+        const handleMobileMagicInput = (e: Event) => {
+          if (magicAccessGranted) return;
+          const val = (e.target as HTMLInputElement).value.toLowerCase();
+          if (val.includes(MAGIC_WORD)) {
+            grantMagicAccess();
+          }
+        };
+
         const grantMagicAccess = () => {
+          if (magicAccessGranted) return;
+          magicAccessGranted = true;
           window.removeEventListener('keydown', handleKeystroke);
+          mobileInput?.removeEventListener('input', handleMobileMagicInput);
           setMagicWord();
           if (error666View) {
             if (!motionQuery.matches) {
@@ -344,12 +357,7 @@ const tokenCodes = [115, 105, 97, 104, 111, 107, 100, 117, 114, 106, 97, 110, 97
             // Mobile support: listen to the hidden input
             if (mobileInput) {
               error666View.addEventListener('click', () => mobileInput.focus());
-              mobileInput.addEventListener('input', (e) => {
-                const val = (e.target as HTMLInputElement).value.toLowerCase();
-                if (val.includes(MAGIC_WORD)) {
-                  grantMagicAccess();
-                }
-              });
+              mobileInput.addEventListener('input', handleMobileMagicInput);
             }
             
             // Check query param as fallback
