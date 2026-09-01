@@ -1,19 +1,204 @@
 ---
-import ContentCard from '../../components/content/ContentCard.astro';
-import SectionHero from '../../components/content/SectionHero.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import DocLayout from '../../components/docs/DocLayout.astro';
+import DocSidebar from '../../components/docs/DocSidebar.astro';
+import NoteCard from '../../components/docs/NoteCard.astro';
 import { getCollectionIfNotEmpty } from '../../lib/content/collections';
 import { collectionPath } from '../../lib/content/routes';
-import { isPublished, sortByDateDescending } from '../../lib/content/sort';
+import { isPublished } from '../../lib/content/sort';
+import type { CollectionEntry } from 'astro:content';
 
-const entries = sortByDateDescending((await getCollectionIfNotEmpty('tutorials')).filter(isPublished));
+type TutorialEntry = CollectionEntry<'tutorials'>;
+
+const entries = (await getCollectionIfNotEmpty('tutorials')).filter(isPublished);
+
+function seriesOf(entry: TutorialEntry) {
+  return entry.data.series ?? null;
+}
+
+function chapterOrder(entry: TutorialEntry) {
+  return entry.data.order ?? 0;
+}
+
+const bySeries = new Map<string, TutorialEntry[]>();
+const standalone: TutorialEntry[] = [];
+for (const entry of entries) {
+  const series = seriesOf(entry);
+  if (series) {
+    const bucket = bySeries.get(series) ?? [];
+    bucket.push(entry);
+    bySeries.set(series, bucket);
+  } else {
+    standalone.push(entry);
+  }
+}
+
+for (const bucket of bySeries.values()) {
+  bucket.sort((left, right) => chapterOrder(left) - chapterOrder(right));
+}
+
+const orderedSeries = [...bySeries.entries()].sort(
+  ([, left], [, right]) => chapterOrder(left[0]) - chapterOrder(right[0]),
+);
+
+const sidebarGroups = [
+  {
+    label: '',
+    items: [{ label: 'All tutorials', href: '/tutorials/#overview', count: entries.length, active: true }],
+  },
+  ...orderedSeries.map(([seriesName, seriesEntries]) => ({
+    label: 'Series',
+    items: [
+      {
+        label: seriesName,
+        href: `/tutorials/#${slugify(seriesName)}`,
+        count: seriesEntries.length,
+      },
+    ],
+  })),
+  ...(standalone.length > 0
+    ? [
+        {
+          label: 'Standalone',
+          items: [
+            {
+              label: 'Lainnya',
+              href: '/tutorials/#standalone',
+              count: standalone.length,
+            },
+          ],
+        },
+      ]
+    : []),
+];
+
+function slugify(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
 ---
 
 <BaseLayout title="Tutorials" description="Practical learning paths and implementation guides.">
-  <SectionHero title="Tutorials" description="Step-by-step guides with prerequisites, outcomes, and durable implementation notes." />
-  <section class="grid-list">
-    {entries.map((entry) => (
-      <ContentCard title={entry.data.title} description={entry.data.description} href={collectionPath('tutorials', entry.id)} tags={entry.data.tags} />
+  <DocLayout>
+    <DocSidebar slot="sidebar" heading="Tutorials" groups={sidebarGroups} />
+    <section class="section-hero" id="overview">
+      <p class="eyebrow">Learning paths</p>
+      <h1>Tutorials</h1>
+      <p>Step-by-step guides dengan prasyarat, hasil yang dicapai, dan catatan implementasi yang tahan lama.</p>
+    </section>
+
+    {entries.length === 0 && (
+      <section class="doc-article">
+        <p>Belum ada tutorial. Tambahkan file markdown di bawah <code>src/content/tutorials/</code> untuk menerbitkan tutorial pertama kamu.</p>
+      </section>
+    )}
+
+    {orderedSeries.map(([seriesName, seriesEntries]) => (
+      <section class="notes-group" id={slugify(seriesName)}>
+        <div class="notes-group-head">
+          <p class="eyebrow">{seriesName}</p>
+          <span class="notes-group-count">{seriesEntries.length} bab</span>
+        </div>
+        <div class="notes-group-grid">
+          {seriesEntries.map((entry) => (
+            <NoteCard
+              eyebrow={entry.data.order ? `Bab ${entry.data.order}` : 'Tutorial'}
+              title={entry.data.title}
+              description={entry.data.description}
+              href={collectionPath('tutorials', entry.id)}
+              tags={entry.data.tags}
+              date={formatDate(entry.data.date)}
+            />
+          ))}
+        </div>
+      </section>
     ))}
-  </section>
+
+    {standalone.length > 0 && (
+      <section class="notes-group" id="standalone">
+        <div class="notes-group-head">
+          <p class="eyebrow">Standalone</p>
+          <span class="notes-group-count">{standalone.length}</span>
+        </div>
+        <div class="notes-group-grid">
+          {standalone.map((entry) => (
+            <NoteCard
+              eyebrow="Tutorial"
+              title={entry.data.title}
+              description={entry.data.description}
+              href={collectionPath('tutorials', entry.id)}
+              tags={entry.data.tags}
+              date={formatDate(entry.data.date)}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+  </DocLayout>
 </BaseLayout>
+
+<style>
+  .section-hero {
+    animation: reveal-up 900ms var(--motion) both;
+    padding: 0 0 2.5rem;
+  }
+
+  .section-hero h1 {
+    font-size: clamp(1.9rem, 4.5vw, 3rem);
+    line-height: 1.12;
+    margin: 0;
+    max-width: 820px;
+  }
+
+  .section-hero p:not(.eyebrow) {
+    color: var(--body);
+    font-size: 15px;
+    line-height: 1.71;
+    margin: 1rem 0 0;
+    max-width: 72ch;
+    text-wrap: pretty;
+  }
+
+  .notes-group {
+    animation: reveal-up 900ms var(--motion) both;
+    margin-top: 2.5rem;
+    scroll-margin-top: 6rem;
+  }
+
+  .notes-group-head {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: space-between;
+  }
+
+  .notes-group-head .eyebrow {
+    margin-bottom: 0.5rem;
+  }
+
+  .notes-group-count {
+    background: var(--surface-card);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 999px;
+    color: var(--mute);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 3px 9px;
+  }
+
+  .notes-group-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 640px) {
+    .notes-group-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,7 +1,23 @@
 ---
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import DocLayout from '../../components/docs/DocLayout.astro';
+import DocSidebar from '../../components/docs/DocSidebar.astro';
+import TocPanel from '../../components/docs/TocPanel.astro';
+import BacklinksPanel from '../../components/docs/BacklinksPanel.astro';
+import { mdxComponents } from '../../components/mdx';
 import { getCollectionIfNotEmpty } from '../../lib/content/collections';
+import { collectionPath } from '../../lib/content/routes';
+import {
+  findBacklinks,
+  noteDate,
+  noteDescription,
+  noteTitle,
+  noteType,
+  noteTypeLabel,
+  noteTypeOrder,
+  sortNotesByDateDescending,
+} from '../../lib/content/notes';
 
 export async function getStaticPaths() {
   const entries = await getCollectionIfNotEmpty('notes', ({ data }) => !data.draft);
@@ -9,13 +25,123 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content } = await render(entry);
+const allEntries = (await getCollectionIfNotEmpty('notes', ({ data }) => !data.draft)).filter(
+  (candidate) => candidate.id !== entry.id,
+);
+
+const dates = new Map<string, Date>();
+for (const candidate of allEntries) {
+  dates.set(candidate.id, await noteDate(candidate));
+}
+const currentDate = await noteDate(entry);
+
+const sorted = sortNotesByDateDescending(allEntries, dates);
+const index = sorted.findIndex((candidate) => candidate.id === entry.id);
+const newerNote = index > 0 ? sorted[index - 1] : undefined;
+const olderNote = index >= 0 && index < sorted.length - 1 ? sorted[index + 1] : undefined;
+
+const type = noteType(entry);
+const title = noteTitle(entry);
+const description = noteDescription(entry);
+const backlinks = findBacklinks([...allEntries, entry], entry.id);
+
+const byType = new Map<string, number>();
+for (const candidate of [...allEntries, entry]) {
+  const candidateType = noteType(candidate);
+  byType.set(candidateType, (byType.get(candidateType) ?? 0) + 1);
+}
+const orderedTypes = [...byType.keys()].sort((left, right) => noteTypeOrder(left as any) - noteTypeOrder(right as any));
+
+const sidebarGroups = [
+  {
+    label: '',
+    items: [
+      { label: 'All notes', href: '/notes/', count: allEntries.length + 1 },
+    ],
+  },
+  {
+    label: 'Categories',
+    items: orderedTypes.map((candidateType) => ({
+      label: noteTypeLabel(candidateType as any),
+      href: `/notes/#${candidateType}`,
+      count: byType.get(candidateType) ?? 0,
+      active: candidateType === type,
+    })),
+  },
+];
+
+const { Content, headings } = await render(entry);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
 ---
 
-<BaseLayout title={entry.data.title} description={entry.data.description}>
-  <article class="prose">
-    <p class="eyebrow">{entry.data.noteType}</p>
-    <h1>{entry.data.title}</h1>
-    <Content />
-  </article>
+<BaseLayout title={title} description={description || title}>
+  <DocLayout hasToc={headings.length > 0}>
+    <DocSidebar slot="sidebar" heading="Notes" groups={sidebarGroups} />
+    <article class="doc-article">
+      <p class="eyebrow">{noteTypeLabel(type)}</p>
+      <h1>{title}</h1>
+      <div class="doc-article-meta">
+        <time datetime={currentDate.toISOString()}>{formatDate(currentDate)}</time>
+        {entry.data.tags.length > 0 && (
+          <>
+            <span class="dot">·</span>
+            <span>{entry.data.tags.join(', ')}</span>
+          </>
+        )}
+        {entry.data.readingTime && (
+          <>
+            <span class="dot">·</span>
+            <span>{entry.data.readingTime}</span>
+          </>
+        )}
+      </div>
+      <div class="prose prose-docs">
+        <Content components={mdxComponents} />
+      </div>
+      <BacklinksPanel
+        links={backlinks.map((candidate) => ({
+          href: collectionPath('notes', candidate.id),
+          title: noteTitle(candidate),
+          description: noteDescription(candidate),
+        }))}
+      />
+      {(newerNote || olderNote) && (
+        <nav class="doc-prev-next" aria-label="Note navigation">
+          {newerNote ? (
+            <a href={collectionPath('notes', newerNote.id)}>
+              <span class="pn-label">Newer note</span>
+              <span class="pn-title">{noteTitle(newerNote)}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+          {olderNote ? (
+            <a href={collectionPath('notes', olderNote.id)} data-next="true">
+              <span class="pn-label">Older note</span>
+              <span class="pn-title">{noteTitle(olderNote)}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )}
+    </article>
+    <TocPanel slot="toc" headings={headings} />
+  </DocLayout>
 </BaseLayout>
+
+<style>
+  .doc-article h1 {
+    color: var(--ink);
+    font-size: clamp(1.9rem, 4.2vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.12;
+    margin: 0;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+</style>

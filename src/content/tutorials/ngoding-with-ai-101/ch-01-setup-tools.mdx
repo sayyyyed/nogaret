@@ -1,0 +1,113 @@
+---
+title: Setup Tools
+description: Install Visual Studio Code, Git, Codex, dan Node — empat tool inti yang akan kamu pakai di seluruh seri Ngoding with AI 101.
+date: 2026-09-01
+difficulty: beginner
+series: Ngoding with AI 101
+order: 1
+prerequisites: []
+outcomes:
+  - Menginstall dan memverifikasi empat tool inti
+  - Memahami fungsi singkat masing-masing tool
+  - Siap lanjut ke bab pembuatan akun
+tags: [setup, tools, vscode, git, codex, node, install]
+---
+
+Selamat datang di seri **Ngoding with AI 101**! Sebelum mulai menulis kode dengan bantuan AI, kamu perlu menyiapkan empat tool dasar. Bab ini berisi langkah instalasi satu per satu — lengkap dengan fungsi singkat, link resmi, dan cara memverifikasi bahwa instalasinya berhasil.
+
+<Callout type="info" title="Siapkan folder kerja">
+Buat satu folder kosong khusus untuk proyek coding kamu, misalnya `C:\projects` atau `~/projects`. Semua bab berikutnya akan merujuk ke folder ini.
+</Callout>
+
+## Kenapa empat tool ini?
+
+Keempat tool ini saling melengkapi dan dipakai di hampir semua proyek modern:
+
+- **VS Code** adalah tempat kamu menulis kode.
+- **Git** melacak perubahan kode dan jadi jembatan ke GitHub.
+- **Node** menjalankan tooling dan server JavaScript.
+- **Codex** adalah asisten AI yang membantumu menulis kode langsung dari terminal.
+
+<OptionalPanel title="Urutan instalasi">
+Instal dalam urutan di bawah ini (VS Code → Git → Codex → Node). Urutannya tidak wajib, tapi mengikuti urutan ini membuat setiap tool siap sebelum dipakai tool berikutnya.
+</OptionalPanel>
+
+## 1. Visual Studio Code
+
+<ToolCard icon="vscode" name="Visual Studio Code" url="https://code.visualstudio.com/" hint="code --version" badge="Editor kode">
+<p>VS Code adalah editor kode gratis dari Microsoft — ringan, cepat, dan ekosistem *extension*-nya sangat besar. Ini "rumah" utama tempat kamu menulis, mengedit, dan menjalankan kode.</p>
+<p>Setelah terinstal, ekosistem ekstensi AI (seperti GitHub Copilot) bisa kamu pasang di bab-bab berikutnya.</p>
+</ToolCard>
+
+Unduh installer dari laman resminya lalu jalankan. Centang opsi **"Add to PATH"** saat wizard instalasi agar perintah `code` bisa dipanggil dari terminal.
+
+## 2. Git
+
+<ToolCard icon="git" name="Git" url="https://git-scm.com/" hint="git --version" badge="Version control">
+<p>Git adalah *version control system* yang melacak setiap perubahan kode. Kamu bisa kembali ke versi lama, membuat *branch*, dan berkolaborasi dengan tim tanpa menimpa pekerjaan satu sama lain.</p>
+<p>Git juga yang menghubungkan komputer kamu ke GitHub di bab selanjutnya.</p>
+</ToolCard>
+
+Instal dengan opsi default. Jika kamu di Windows, Git Bash ikut terpasang — terminal yang akan sangat berguna nanti.
+
+## 3. Codex
+
+<ToolCard icon="codex" name="Codex" url="https://openai.com/codex/" hint="codex --version" badge="AI coding agent">
+<p>Codex adalah agen coding AI dari OpenAI yang bekerja dari terminal. Kamu bisa memintanya menulis, menjelaskan, atau memperbaiki kode dengan perintah bahasa sehari-hari.</p>
+<p>Codex butuh login akun OpenAI — akun yang sama dengan ChatGPT yang akan kamu buat di <a href="/tutorials/ngoding-with-ai-101/ch-02-create-accounts/">bab berikutnya</a>.</p>
+</ToolCard>
+
+Instal Codex sesuai petunjuk di laman resminya (umumnya lewat `npm install -g @openai/codex` atau installer resmi). Login setelahnya dengan perintah yang ditampilkan installer.
+
+<Callout type="warning" title="Codex butuh login">
+Jangan khawatir kalau Codex minta login saat pertama dijalankan — itu normal. Kamu akan menyiapkan akunnya di bab berikutnya.
+</Callout>
+
+## 4. Node.js
+
+<ToolCard icon="node" name="Node.js" url="https://nodejs.org/" hint="node -v" badge="JavaScript runtime">
+<p>Node.js adalah runtime yang menjalankan JavaScript di luar browser. Hampir semua tooling modern (termasuk Codex dan banyak CLI lainnya) berjalan di atas Node.</p>
+<p>Pilih versi **LTS** di laman resminya — versi paling stabil dan paling banyak dipakai produksi.</p>
+</ToolCard>
+
+Selesai instalasi, kamu sudah punya `npm` (Node Package Manager) sekaligus — manajer paket yang dipakai memasang library JavaScript.
+
+## Verifikasi semua instalasi
+
+Semua perintah di bab ini dijalankan dari **Command Prompt (CMD) Windows** — terminal bawaan Windows.
+
+**Cara membuka CMD:**
+
+1. Tekan tombol **<WinKey /> + R** bersamaan di keyboard.
+2. Ketik `cmd` lalu tekan **Enter**.
+3. Jendela Command Prompt (latar hitam) terbuka — di sinilah kamu mengetik semua perintah.
+
+<OptionalPanel title="Tombol Windows">
+Tombol **<WinKey />** (Windows) adalah tombol berlogo jendela di baris bawah keyboard, biasanya di antara `Ctrl` dan `Alt` kiri. Menekannya bersamaan dengan huruf `R` membuka kotak dialog *Run*.
+</OptionalPanel>
+
+<Callout type="info" title="Baru pertama kali pakai terminal?">
+Jangan khawatir — kamu cukup menyalin perintah di bawah, menempelkannya di CMD, lalu menekan **Enter**. Kalau ada pesan *"is not recognized"*, berarti tool belum terdaftar — tutup dan buka ulang CMD, lalu coba lagi.
+</Callout>
+
+Ketik setiap perintah satu per satu lalu tekan **Enter**:
+
+```bash
+code --version
+git --version
+codex --version
+node -v
+npm -v
+```
+
+<Callout type="success" title="Semua terpasang">
+Setiap perintah di atas harus menampilkan nomor versi. Jika ada yang tidak dikenali, tutup dan buka ulang CMD — PATH belum dimuat ulang.
+</Callout>
+
+<Callout type="tip" title="Kamu siap melangkah">
+Semua tool inti sudah terpasang. Lanjut ke bab berikutnya untuk membuat akun yang menghubungkan semuanya.
+</Callout>
+
+## Lanjut ke bab berikutnya
+
+[Lanjut ke Bab 2 · Buat Akun →](/tutorials/ngoding-with-ai-101/ch-02-create-accounts/)

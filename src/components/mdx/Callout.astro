@@ -1,0 +1,81 @@
+---
+interface Props {
+  type?: 'tip' | 'success' | 'warning' | 'info';
+  title?: string;
+}
+
+const { type = 'tip', title } = Astro.props;
+
+const meta = {
+  tip: { label: 'Tip', background: 'var(--accent-blue-soft)', color: '#2c84e0' },
+  success: { label: 'Success', background: 'var(--accent-green-soft)', color: '#2c8c66' },
+  warning: { label: 'Warning', background: 'var(--accent-red-soft)', color: '#cd4239' },
+  info: { label: 'Info', background: 'var(--accent-purple-soft)', color: '#7c44a6' },
+}[type];
+
+const icons = {
+  tip: 'M9.2 2h5.6l.8 2.6a7 7 0 0 1 2.4 2.4l2.6.8v5.6l-2.6.8a7 7 0 0 1-2.4 2.4l-.8 2.6H9.2l-.8-2.6a7 7 0 0 1-2.4-2.4l-2.6-.8V7.8l2.6-.8a7 7 0 0 1 2.4-2.4L9.2 2zM12 6.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM12 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4z',
+  success: 'M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM8.5 12.2l2.3 2.3 4.7-5',
+  warning: 'M12 3l10 18H2L12 3zM12 9.5v5M12 16.8v.2',
+  info: 'M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18zM12 11v5.5M12 7.5v.2',
+}[type];
+---
+
+<div class="callout" style={`background:${meta.background}`}>
+  <p class="callout-label" style={`color:${meta.color}`}>
+    <svg class="callout-icon" viewBox="0 0 24 24" aria-hidden="true" width="16" height="16">
+      <path d={icons} fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+    {title ?? meta.label}
+  </p>
+  <div class="callout-body">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .callout {
+    border-radius: 6px;
+    color: var(--ink);
+    margin: 1.25rem 0;
+    padding: 16px 20px;
+  }
+
+  .callout-label {
+    align-items: center;
+    display: inline-flex;
+    gap: 0.5rem;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1.33;
+    margin: 0 0 0.35rem;
+    text-transform: uppercase;
+  }
+
+  .callout-icon {
+    flex: 0 0 auto;
+  }
+
+  .callout-body {
+    font-size: 15px;
+    line-height: 1.71;
+  }
+
+  .callout-body :global(p) {
+    margin: 0;
+  }
+
+  .callout-body :global(p + p) {
+    margin-top: 0.75rem;
+  }
+
+  .callout-body :global(code) {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 2px;
+    font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0.1rem 0.35rem;
+  }
+</style>

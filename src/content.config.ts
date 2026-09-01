@@ -35,6 +35,8 @@ const tutorials = defineCollection({
   schema: baseContentSchema.extend({
     prerequisites: z.array(z.string()).default([]),
     outcomes: z.array(z.string()).default([]),
+    order: z.number().optional(),
+    chapterLabel: z.string().optional(),
   }),
 });
 
@@ -70,11 +72,16 @@ const projects = defineCollection({
 
 const notes = defineCollection({
   loader: glob({ base: './src/content/notes', pattern: '**/*.{md,mdx}' }),
-  schema: baseContentSchema.extend({
-    noteType: z.enum(['permanent', 'concept', 'research', 'reference', 'moc', 'topic-hub']),
-    connections: z.array(z.string()).default([]),
-    aliases: z.array(z.string()).default([]),
-  }),
+  schema: baseContentSchema
+    .extend({
+      title: z.string().optional(),
+      description: z.string().optional(),
+      date: z.coerce.date().optional(),
+      noteType: z.enum(['permanent', 'concept', 'research', 'reference', 'moc', 'topic-hub']).optional(),
+      connections: z.array(z.string()).default([]),
+      aliases: z.array(z.string()).default([]),
+    })
+    .passthrough(),
 });
 
 const labs = defineCollection({

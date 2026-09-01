@@ -1,0 +1,104 @@
+---
+title: Kenalan VS Code & CMD
+description: Kenalan dulu dengan "medan perang"-nya — jendela VS Code, terminal CMD, dan beberapa perintah dasar sebelum mulai menulis kode.
+date: 2026-09-03
+difficulty: beginner
+series: Ngoding with AI 101
+order: 3
+prerequisites:
+  - Setup Tools
+  - Buat Akun
+outcomes:
+  - Membuka VS Code dari Command Prompt
+  - Mengenal bagian-bagian utama jendela VS Code
+  - Menggunakan 5 perintah CMD paling dasar
+  - Membuka folder proyek dari terminal
+tags: [vscode, cmd, terminal, dasar]
+---
+
+Semua tool sudah terpasang dan akun sudah siap. Sekarang kita kenalan dulu dengan tempat kamu akan "ngoding" — editor **VS Code** dan terminal **CMD**. Bab ini tidak menulis kode dulu; kamu akan merasa nyaman dengan kedua alat ini sebelum bab berikutnya mulai membuat proyek pertama.
+
+<Callout type="info" title="Kamu tidak perlu menghafal">
+Semua perintah di bab ini tinggal diketik ulang sesuai contoh. Semakin sering dipakai, semakin hafal sendiri.
+</Callout>
+
+## Buka VS Code dari CMD
+
+Ada cara cepat membuka VS Code langsung di folder yang kamu inginkan — lewat CMD dengan perintah `code .`.
+
+1. Tekan **<WinKey /> + R**, ketik `cmd`, lalu **Enter**.
+2. Pindah ke folder proyek kamu (contohnya `projects`): `cd projects`.
+3. Ketik `code .` lalu **Enter**.
+
+<Callout type="success" title="VS Code terbuka">
+Jendela VS Code akan terbuka dan otomatis memuat folder yang sedang aktif di CMD. Titik (`.`) artinya "folder saat ini".
+</Callout>
+
+## Kenalan dengan jendela VS Code
+
+| Bagian | Letak | Fungsi |
+| --- | --- | --- |
+| **Explorer** | Sisi kiri | Daftar file & folder proyek |
+| **Editor** | Tengah | Tempat menulis dan melihat kode |
+| **Panel Terminal** | Bawah | Terminal bawaan VS Code |
+| **Status Bar** | Paling bawah | Info baris/kolom & cabang Git |
+
+<Callout type="tip" title="Buka file cepat">
+Tekan **Ctrl + P** lalu ketik nama file untuk membukanya tanpa perlu klik-klik di Explorer.
+</Callout>
+
+## Perintah CMD dasar
+
+Ini lima perintah yang paling sering dipakai di awal:
+
+| Perintah | Fungsi | Contoh |
+| --- | --- | --- |
+| `cd` | Pindah ke folder | `cd projects` |
+| `dir` | Lihat isi folder | `dir` |
+| `mkdir` | Buat folder baru | `mkdir proyek-pertama` |
+| `code .` | Buka folder di VS Code | `code .` |
+| `cls` | Bersihkan layar CMD | `cls` |
+
+```cmd
+cd projects
+dir
+mkdir proyek-pertama
+cd proyek-pertama
+code .
+```
+
+<Callout type="info" title="Perintah kecil-kecil saja">
+Kamu tidak perlu tahu semua perintah sekarang. Lima ini sudah cukup untuk memulai — sisanya menyusul seiring bab berjalan.
+</Callout>
+
+## Terminal di dalam VS Code
+
+VS Code punya terminal bawaan, jadi kamu tidak selalu harus membuka CMD terpisah.
+
+1. Tekan **Ctrl + \`** (tombol backtick, di kiri angka 1).
+2. Panel Terminal muncul di bagian bawah editor.
+3. Ketik perintah yang sama seperti di CMD — misalnya `node -v`.
+
+<Callout type="tip" title="CMD atau Terminal VS Code?">
+Keduanya sama-sama bisa dipakai. Banyak yang memilih terminal VS Code karena semua ada dalam satu jendela. Untuk bab-bab berikutnya kita pakai terminal VS Code.
+</Callout>
+
+## Pasang ekstensi AI di VS Code
+
+<OptionalPanel title="Pasang ekstensi AI">
+Ekstensi AI di VS Code mempercepat kerja dengan saran kode otomatis. Ini pelengkap — Codex sudah cukup untuk mengikuti seri ini.
+
+1. Buka panel **Extensions** (Ctrl + Shift + X).
+2. Cari **GitHub Copilot** atau **Continue**.
+3. Klik **Install**, lalu login bila diminta.
+
+Ekstensi ini menyorot saran kode langsung di editor. Kalau terasa mengganggu, bisa dimatikan kapan saja dari menu Extension.
+</OptionalPanel>
+
+<Callout type="success" title="Kamu sudah siap">
+Sekarang kamu bisa membuka VS Code dari CMD, tahu di mana menulis kode, dan lancar dengan perintah dasar. Bab berikutnya kita bikin proyek pertama dan menjalankannya!
+</Callout>
+
+## Kembali ke bab sebelumnya
+
+[← Kembali ke Bab 2 · Buat Akun](/tutorials/ngoding-with-ai-101/ch-02-create-accounts/)

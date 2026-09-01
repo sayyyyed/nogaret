@@ -1,7 +1,15 @@
 ---
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import DocLayout from '../../components/docs/DocLayout.astro';
+import DocSidebar from '../../components/docs/DocSidebar.astro';
+import TocPanel from '../../components/docs/TocPanel.astro';
+import { mdxComponents } from '../../components/mdx';
 import { getCollectionIfNotEmpty } from '../../lib/content/collections';
+import { collectionPath } from '../../lib/content/routes';
+import type { CollectionEntry } from 'astro:content';
+
+type TutorialEntry = CollectionEntry<'tutorials'>;
 
 export async function getStaticPaths() {
   const entries = await getCollectionIfNotEmpty('tutorials', ({ data }) => !data.draft);
@@ -9,13 +17,148 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content } = await render(entry);
+
+function seriesOf(candidate: TutorialEntry) {
+  return candidate.data.series ?? null;
+}
+
+function chapterOrder(candidate: TutorialEntry) {
+  return candidate.data.order ?? 0;
+}
+
+const allEntries = await getCollectionIfNotEmpty('tutorials', ({ data }) => !data.draft);
+
+const currentSeries = seriesOf(entry);
+
+const bySeries = new Map<string, TutorialEntry[]>();
+const standalone: TutorialEntry[] = [];
+for (const candidate of allEntries) {
+  const series = seriesOf(candidate);
+  if (series) {
+    const bucket = bySeries.get(series) ?? [];
+    bucket.push(candidate);
+    bySeries.set(series, bucket);
+  } else {
+    standalone.push(candidate);
+  }
+}
+
+for (const bucket of bySeries.values()) {
+  bucket.sort((left, right) => chapterOrder(left) - chapterOrder(right));
+}
+
+const seriesChapters = currentSeries ? bySeries.get(currentSeries) ?? [] : [];
+const indexInSeries = seriesChapters.findIndex((candidate) => candidate.id === entry.id);
+const prevChapter = indexInSeries > 0 ? seriesChapters[indexInSeries - 1] : undefined;
+const nextChapter =
+  indexInSeries >= 0 && indexInSeries < seriesChapters.length - 1
+    ? seriesChapters[indexInSeries + 1]
+    : undefined;
+
+const orderedSeries = [...bySeries.entries()].sort(
+  ([, left], [, right]) => chapterOrder(left[0]) - chapterOrder(right[0]),
+);
+
+function slugify(value: string) {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+const sidebarGroups = [
+  {
+    label: '',
+    items: [{ label: 'All tutorials', href: '/tutorials/', count: allEntries.length }],
+  },
+  ...orderedSeries.map(([seriesName, seriesEntries]) => ({
+    label: seriesName,
+    items: seriesEntries.map((candidate) => ({
+      label: candidate.data.order ? `${candidate.data.order} · ${candidate.data.title}` : candidate.data.title,
+      href: collectionPath('tutorials', candidate.id),
+      active: candidate.id === entry.id,
+    })),
+  })),
+  ...(standalone.length > 0
+    ? [
+        {
+          label: 'Standalone',
+          items: standalone.map((candidate) => ({
+            label: candidate.data.title,
+            href: collectionPath('tutorials', candidate.id),
+            active: candidate.id === entry.id,
+          })),
+        },
+      ]
+    : []),
+];
+
+const eyebrow = currentSeries
+  ? `${currentSeries}${entry.data.order ? ` · Bab ${entry.data.order}` : ''}`
+  : (entry.data.difficulty ?? 'tutorial');
+
+const { Content, headings } = await render(entry);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
 ---
 
 <BaseLayout title={entry.data.title} description={entry.data.description}>
-  <article class="prose">
-    <p class="eyebrow">{entry.data.difficulty ?? 'tutorial'}</p>
-    <h1>{entry.data.title}</h1>
-    <Content />
-  </article>
+  <DocLayout hasToc={headings.length > 0}>
+    <DocSidebar slot="sidebar" heading="Tutorials" groups={sidebarGroups} />
+    <article class="doc-article">
+      <p class="eyebrow">{eyebrow}</p>
+      <h1>{entry.data.title}</h1>
+      <div class="doc-article-meta">
+        <time datetime={entry.data.date.toISOString()}>{formatDate(entry.data.date)}</time>
+        {entry.data.tags.length > 0 && (
+          <>
+            <span class="dot">·</span>
+            <span>{entry.data.tags.join(', ')}</span>
+          </>
+        )}
+        {entry.data.readingTime && (
+          <>
+            <span class="dot">·</span>
+            <span>{entry.data.readingTime}</span>
+          </>
+        )}
+      </div>
+      <div class="prose prose-docs">
+        <Content components={mdxComponents} />
+      </div>
+      {(prevChapter || nextChapter) && (
+        <nav class="doc-prev-next" aria-label="Chapter navigation">
+          {prevChapter ? (
+            <a href={collectionPath('tutorials', prevChapter.id)}>
+              <span class="pn-label">Bab sebelumnya</span>
+              <span class="pn-title">{prevChapter.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+          {nextChapter ? (
+            <a href={collectionPath('tutorials', nextChapter.id)} data-next="true">
+              <span class="pn-label">Bab selanjutnya</span>
+              <span class="pn-title">{nextChapter.data.title}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )}
+    </article>
+    <TocPanel slot="toc" headings={headings} />
+  </DocLayout>
 </BaseLayout>
+
+<style>
+  .doc-article h1 {
+    color: var(--ink);
+    font-size: clamp(1.9rem, 4.2vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.12;
+    margin: 0;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+</style>

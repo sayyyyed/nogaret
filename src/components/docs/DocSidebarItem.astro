@@ -1,0 +1,84 @@
+---
+export interface Props {
+  label: string;
+  href: string;
+  count?: number;
+  active?: boolean;
+  icon?: string;
+}
+
+const { label, href, count, active = false, icon } = Astro.props;
+---
+
+<a class="sidebar-item" href={href} aria-current={active ? 'page' : undefined} data-active={active ? 'true' : 'false'}>
+  {icon && (
+    <span class="sidebar-item-icon" aria-hidden="true">
+      {icon}
+    </span>
+  )}
+  <span class="sidebar-item-label">{label}</span>
+  {typeof count === 'number' && <span class="sidebar-item-count">{count}</span>}
+</a>
+
+<style>
+  .sidebar-item {
+    align-items: center;
+    border-radius: 4px;
+    color: var(--body);
+    display: flex;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 0.5rem;
+    line-height: 1.5;
+    min-height: 30px;
+    padding: 4px 8px;
+    text-decoration: none;
+    transition:
+      background-color 150ms var(--motion),
+      color 150ms var(--motion);
+  }
+
+  .sidebar-item:hover,
+  .sidebar-item:focus-visible {
+    background: var(--surface-soft);
+    color: var(--ink);
+  }
+
+  .sidebar-item[data-active="true"] {
+    background: var(--surface-soft);
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .sidebar-item-icon {
+    align-items: center;
+    background: var(--surface-card);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 4px;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: 12px;
+    height: 22px;
+    justify-content: center;
+    width: 22px;
+  }
+
+  .sidebar-item-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sidebar-item-count {
+    background: var(--surface-card);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 999px;
+    color: var(--mute);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    margin-left: auto;
+    padding: 2px 7px;
+  }
+</style>

@@ -1,0 +1,113 @@
+---
+title: Instalasi Next.js
+description: Instal Next.js lewat Codex, pahami struktur proyek, jalankan dev server, dan iterasi prompt pertama berdasarkan app.md dan DESIGN.md.
+date: 2026-09-05
+difficulty: beginner
+series: Ngoding with AI 101
+order: 5
+prerequisites:
+  - Persiapan Koding
+outcomes:
+  - Menginstal Next.js dengan bantuan Codex
+  - Memahami struktur folder hasil scaffold
+  - Menjalankan dev server di localhost:3000
+  - Menulis prompt perbaikan pertama
+tags: [nextjs, codex, prompt, install]
+---
+
+Bekalmu sudah lengkap — `app.md` menjelaskan *fungsi*, `DESIGN.md` menjelaskan *tampilan*, dan keduanya sudah tersimpan di GitHub. Sekarang kita pakai bekal itu untuk **membangun aplikasi beneran**. Tidak perlu mengetik boilerplate manual; kita minta Codex yang melakukannya, lalu kamu pelajari hasilnya.
+
+## Kenapa Next.js?
+
+Kamu bisa saja membuat file HTML biasa, tapi Next.js memberi fondasi yang dipakai industri untuk aplikasi web modern:
+
+| HTML biasa | Next.js |
+| --- | --- |
+| Satu file statis, routing manual | Routing otomatis berbasis file di folder `app/` |
+| Harus atur build & optimasi sendiri | Optimasi, *image* & font otomatis |
+| Tidak ada komponen | Berbasis React — komponen bisa dipakai ulang |
+
+<Callout type="info" title="Tidak perlu menghafal dulu">
+Di bab ini kamu cukup tahu: **Next.js = cara standar membangun aplikasi web dengan React**. Detailnya akan terasa sendiri setelah aplikasinya jalan.
+</Callout>
+
+## 1. Minta Codex menginstal Next.js
+
+Pastikan VS Code masih membuka folder `ngoding-ai-101` dan terminal VS Code aktif (Ctrl + \`). Ketik prompt ini ke Codex:
+
+```text
+Buatkan aplikasi berdasarkan app.md dan DESIGN.md menggunakan Next.js (TypeScript, ESLint, App Router)
+```
+
+Codex akan menjalankan perintah setara dengan:
+
+```cmd
+npx create-next-app@latest . --typescript --eslint --app --tailwind
+```
+
+<ToolCard icon="nextjs" name="Next.js" url="https://nextjs.org/" hint="npx create-next-app --version" badge="React framework">
+<p>Next.js adalah framework React paling populer untuk membangun aplikasi web — routing, optimasi, dan build sudah ditangani. Codex akan men-setup strukturnya untukmu, kamu tinggal memahami hasilnya.</p>
+</ToolCard>
+
+Jawab pertanyaan yang muncul di terminal dengan menekan **Enter** (ambil opsi default).
+
+<Callout type="warning" title="Folder harus kosong?">
+Jika Codex bertanya apakah boleh menimpa file yang ada (`app.md`/`DESIGN.md`), jawab **Yes** — Codex akan memindahkan atau mempertahankan berkas spec kamu.
+</Callout>
+
+## 2. Pahami struktur yang dihasilkan
+
+Setelah selesai, jalankan `dir` dan perhatikan folder baru:
+
+| Folder / File | Fungsi |
+| --- | --- |
+| `app/` | Halaman & layout (routing Next.js) |
+| `public/` | Aset statis (gambar, ikon) |
+| `package.json` | Daftar dependensi & script |
+| `app.md` / `DESIGN.md` | Bekal spec & desain — tetap di root |
+
+Buka `app/page.tsx` di VS Code — ini halaman utama yang baru saja dibuat Codex berdasarkan `app.md`.
+
+## 3. Jalankan dev server
+
+Di terminal VS Code:
+
+```cmd
+npm run dev
+```
+
+Tunggu sampai muncul `Local: http://localhost:3000`. Buka alamat itu di browser.
+
+<Callout type="success" title="Aplikasi jalan">
+Kamu akan melihat halaman yang warnanya dan strukturnya mengikuti `DESIGN.md` — bukan halaman default Next.js. Itulah bukti Codex membaca bekalmu dengan benar.
+</Callout>
+
+Untuk menghentikan server nanti, tekan **Ctrl + C** di terminal.
+
+## 4. Iterasi prompt — perbaiki tampilan
+
+Hasil pertama jarang langsung sempurna. Coba prompt perbaikan spesifik:
+
+```text
+Perbaiki tampilan sesuai DESIGN.md bagian "Colors" — ganti background jadi #eeefe9 dan tombol utama jadi #f7a501
+```
+
+<Callout type="tip" title="Anatomi prompt yang baik">
+Prompt yang bagus punya 3 bagian: **konteks** (file mana), **tugas** (mau diubah apa), **batasan** (warna/ukuran spesifik). Contoh di atas menyebut file (`DESIGN.md`), tugas (`ganti background`), dan nilai (`#eeefe9`).
+</Callout>
+
+Setiap kali Codex selesai, cek `localhost:3000` lagi, lalu commit perubahan lewat **Source Control** (Stage → Commit → Push) seperti di Bab 4.
+
+<OptionalPanel title="Troubleshooting">
+- `npx: command not found` → berarti Node belum terinstal dengan benar. Ulangi **Bab 1 langkah 4** (instal Node LTS) lalu buka ulang terminal.
+- `Port 3000 already in use` → jalankan `npx kill-port 3000` atau ganti port: `npm run dev -- -p 3001`.
+- Halaman putih/error → lihat tab **Problems** di VS Code, salin pesan error dan tempel kembali ke Codex: *"Perbaiki error ini: ..."*
+</OptionalPanel>
+
+<Callout type="success" title="Kamu sudah ngoding dengan AI">
+Aplikasi sudah terinstal, jalan di browser, dan bisa diperbaiki cukup dengan mengetik prompt. Pola *prompt → cek browser → commit* ini akan kamu pakai di setiap bab selanjutnya.
+</Callout>
+
+## Kembali ke bab sebelumnya
+
+[← Kembali ke Bab 4 · Persiapan Koding](/tutorials/ngoding-with-ai-101/ch-04-persiapan-codex/)

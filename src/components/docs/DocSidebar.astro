@@ -1,0 +1,141 @@
+---
+import DocSidebarItem, { type Props as SidebarItemProps } from './DocSidebarItem.astro';
+
+interface Group {
+  label: string;
+  items: SidebarItemProps[];
+}
+
+interface Props {
+  heading?: string;
+  groups: Group[];
+}
+
+const { heading, groups } = Astro.props;
+---
+
+<nav class="doc-nav" aria-label={heading ?? 'Documentation navigation'}>
+  {heading && <p class="doc-nav-heading">{heading}</p>}
+  {groups.map((group) => (
+    <div class="doc-nav-group">
+      {group.label && <p class="doc-nav-group-label">{group.label}</p>}
+      <div class="doc-nav-group-list">
+        {group.items.map((item) => <DocSidebarItem {...item} />)}
+      </div>
+    </div>
+  ))}
+</nav>
+
+<style>
+  .doc-nav {
+    background: var(--canvas);
+    border-radius: 6px;
+    color: var(--body);
+    font-size: 14px;
+    line-height: 1.43;
+    padding: 0.75rem;
+  }
+
+  .doc-nav-heading {
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.33;
+    margin: 0 0 0.5rem;
+    padding: 0 8px;
+    text-transform: uppercase;
+  }
+
+  .doc-nav-group {
+    border-top: 1px solid var(--hairline-soft);
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+  }
+
+  .doc-nav-group:first-of-type {
+    border-top: 0;
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  .doc-nav-group-label {
+    color: var(--mute);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.33;
+    margin: 0 0 0.25rem;
+    padding: 0 8px;
+    text-transform: uppercase;
+  }
+
+  .doc-nav-group-list {
+    display: grid;
+    gap: 2px;
+  }
+
+  @media (max-width: 1024px) {
+    .doc-nav {
+      align-items: center;
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding: 0.25rem 0.25rem 0.5rem;
+      scrollbar-width: none;
+    }
+
+    .doc-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .doc-nav-heading {
+      display: none;
+    }
+
+    .doc-nav-group {
+      border-top: 0;
+      display: flex;
+      gap: 0.5rem;
+      margin: 0;
+      padding: 0;
+    }
+
+    .doc-nav-group-label {
+      align-items: center;
+      display: inline-flex;
+      flex: 0 0 auto;
+      margin: 0;
+      padding: 0;
+    }
+
+    .doc-nav-group-list {
+      display: flex;
+      gap: 0.35rem;
+    }
+
+    .doc-nav-group-list :global(.sidebar-item) {
+      background: var(--surface-card);
+      border: 1px solid var(--hairline-soft);
+      border-radius: 999px;
+      min-height: 34px;
+      padding: 6px 14px;
+      white-space: nowrap;
+    }
+
+    .doc-nav-group-list :global(.sidebar-item[data-active="true"]) {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: var(--on-dark);
+    }
+
+    .doc-nav-group-list :global(.sidebar-item-count) {
+      background: transparent;
+      border: 0;
+    }
+
+    .doc-nav-group-list :global(.sidebar-item[data-active="true"] .sidebar-item-count) {
+      color: var(--surface-soft);
+    }
+  }
+</style>

@@ -1,0 +1,64 @@
+Maps of Content (MOCs) are hubs that group related notes. This guide explains how to publish notes in this garden with almost no overhead — drop a file in a folder and the filename becomes its title.
+
+<Callout type="tip" title="Filename is the title">
+Drop a file into `src/content/notes/` and its filename (kebab-case) becomes the title automatically. Add frontmatter only to override the title, date, tags, or status.
+</Callout>
+
+## How publishing works
+
+1. Create a markdown file under `src/content/notes/` inside one of the typed folders.
+2. Write plain markdown. No frontmatter is required.
+3. Astro collects it at build time and renders it under `/notes/{path}/`.
+4. Titles fall back to the filename; dates fall back to the file's modification time.
+
+<Callout type="success" title="Zero-friction notes">
+A bare `.md` file with just a body is enough to publish. This guide itself has no frontmatter.
+</Callout>
+
+## Folders and note types
+
+| Folder | Note type | Purpose |
+| --- | --- | --- |
+| `permanent/` | Permanent | Durable, evergreen ideas |
+| `concepts/` | Concept | Definitions and mental models |
+| `references/` | Reference | Links, sources, and materials |
+| `mocs/` | Map of Content | Hubs that connect related notes |
+| `research/` | Research | Notes with sources and confidence |
+| `topic-hubs/` | Topic Hub | Topic-oriented collection points |
+
+## Callouts
+
+Use the `<Callout>` component inside `.mdx` files for emphasis.
+
+<Callout type="info" title="Info">
+A `.mdx` file is markdown plus JSX — you can still write everything as markdown and only use components where needed.
+</Callout>
+
+<Callout type="warning" title="Warning">
+Do not place the same note in two folders. Pick one note type per note so the index stays tidy.
+</Callout>
+
+## Code blocks
+
+```js
+export function titleFromId(id: string): string {
+  const basename = id.split('/').pop() ?? id;
+  return basename.replace(/[-_]+/g, ' ').replace(/^\w/, (c) => c.toUpperCase());
+}
+```
+
+## Connecting notes
+
+Add a `connections` array in frontmatter to link related notes. The linked note will show this note in its "Connected notes" panel.
+
+```md
+---
+connections:
+  - mocs/notes-writing-guide
+tags: [writing, digital-garden]
+---
+```
+
+<Callout type="tip" title="Backlinks for free">
+Any note that lists another note's id in `connections` or `aliases` automatically appears as a backlink on the target page.
+</Callout>

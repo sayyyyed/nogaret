@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700;800&family=Source+Code+Pro:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
+@plugin "@tailwindcss/typography";
+
 :root {
   color-scheme: light;
   --canvas: #eeefe9;
@@ -8,6 +10,7 @@
   --surface-card: #ffffff;
   --surface-doc: #fcfcfa;
   --surface-dark: #23251d;
+  --on-dark: #ffffff;
   --primary: #f7a501;
   --primary-pressed: #dd9001;
   --button-neutral-face: #f8f8f4;
@@ -52,10 +55,14 @@ html {
 body {
   background: var(--canvas);
   color: var(--body);
+  display: flex;
+  flex-direction: column;
   font-family: "IBM Plex Sans", "IBM Plex Sans Variable", -apple-system, system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.5;
   margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
   min-width: 320px;
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
@@ -377,6 +384,7 @@ button:focus-visible {
 }
 
 main {
+  flex: 1 0 auto;
   margin: 0 auto;
   max-width: var(--container);
   padding: 0 1.5rem;
@@ -780,6 +788,351 @@ main {
   color: var(--ink);
   margin: 1.25rem 0;
   padding: 1rem 1.25rem;
+}
+
+/* ==========================================================================
+   Docs Typography (prose-docs) — Notes + Tutorials
+   ========================================================================== */
+
+.prose-docs {
+  --tw-prose-body: var(--body);
+  --tw-prose-headings: var(--ink);
+  --tw-prose-lead: var(--body);
+  --tw-prose-links: var(--link-teal);
+  --tw-prose-bold: var(--ink);
+  --tw-prose-counters: var(--mute);
+  --tw-prose-bullets: var(--mute);
+  --tw-prose-hr: var(--hairline);
+  --tw-prose-quotes: var(--ink);
+  --tw-prose-quote-borders: var(--hairline);
+  --tw-prose-captions: var(--mute);
+  --tw-prose-code: var(--ink);
+  --tw-prose-pre-code: var(--on-dark);
+  --tw-prose-pre-bg: var(--surface-dark);
+  --tw-prose-th-borders: var(--hairline);
+  --tw-prose-td-borders: var(--hairline-soft);
+  --tw-prose-background: var(--surface-doc);
+  font-size: 15px;
+  line-height: 1.71;
+  max-width: 76ch;
+}
+
+.prose-docs :where(h1, h2, h3, h4) {
+  letter-spacing: 0;
+  scroll-margin-top: 6rem;
+}
+
+.prose-docs :where(h1) {
+  font-size: clamp(1.9rem, 4.2vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.12;
+  margin: 0 0 1.5rem;
+}
+
+.prose-docs :where(h2) {
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 2.25rem 0 0.75rem;
+}
+
+.prose-docs :where(h3) {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin: 1.75rem 0 0.6rem;
+}
+
+.prose-docs :where(p, li) {
+  font-size: 15px;
+  line-height: 1.71;
+}
+
+.prose-docs :where(code) {
+  background: var(--surface-soft);
+  border-radius: 2px;
+  color: var(--ink);
+  font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0.1rem 0.35rem;
+}
+
+.prose-docs :where(pre) {
+  background: var(--surface-dark);
+  border-radius: 6px;
+  color: var(--on-dark);
+  font-size: 14px;
+  line-height: 1.43;
+  margin: 1.25rem 0;
+  overflow-x: auto;
+  padding: 1rem 1.25rem;
+}
+
+.prose-docs :where(pre code) {
+  background: transparent;
+  color: inherit;
+  font-weight: 400;
+  padding: 0;
+}
+
+.prose-docs :where(blockquote) {
+  background: var(--accent-blue-soft);
+  border: 0;
+  border-radius: 6px;
+  color: var(--ink);
+  font-style: normal;
+  margin: 1.25rem 0;
+  padding: 1rem 1.25rem;
+}
+
+.prose-docs :where(blockquote > :first-child) {
+  margin-top: 0;
+}
+
+.prose-docs :where(blockquote > :last-child) {
+  margin-bottom: 0;
+}
+
+.prose-docs :where(blockquote code) {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.prose-docs :where(a) {
+  color: var(--link-teal);
+  text-decoration: none;
+}
+
+.prose-docs :where(a:hover) {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.prose-docs :where(table) {
+  display: block;
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose-docs :where(thead th) {
+  color: var(--ink);
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.prose-docs :where(td, th) {
+  padding: 0.5rem 0.75rem;
+}
+
+.prose-docs :where(hr) {
+  margin: 2.5rem 0;
+}
+
+.prose-docs :where(.heading-anchor) {
+  color: var(--stone);
+  font-size: 0.85em;
+  font-weight: 500;
+  margin-left: 0.25em;
+  text-decoration: none;
+  transition: color 150ms var(--motion);
+}
+
+.prose-docs :where(.heading-anchor:hover) {
+  color: var(--link-teal);
+}
+
+.prose-docs :where(li > input[type="checkbox"]) {
+  accent-color: var(--primary);
+}
+
+/* ==========================================================================
+   Terminal code block — dark surface with header + copy
+   ========================================================================== */
+
+.terminal-block {
+  background: var(--surface-dark);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  margin: 1.25rem 0;
+  overflow: hidden;
+}
+
+.terminal-header {
+  align-items: center;
+  background: #2a2c24;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--on-dark);
+  display: flex;
+  font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 600;
+  height: 36px;
+  justify-content: space-between;
+  letter-spacing: 0.06em;
+  padding: 0 12px;
+  text-transform: uppercase;
+}
+
+.terminal-header > span {
+  opacity: 0.55;
+}
+
+.terminal-copy {
+  align-items: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--on-dark);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  gap: 6px;
+  letter-spacing: 0;
+  opacity: 0.7;
+  padding: 4px 8px;
+  text-transform: none;
+  transition:
+    background-color 150ms var(--motion),
+    border-color 150ms var(--motion),
+    opacity 150ms var(--motion);
+}
+
+.terminal-copy:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+  opacity: 1;
+}
+
+.terminal-copy:active {
+  transform: scale(0.96);
+}
+
+.terminal-copy.copied {
+  background: var(--accent-green-soft);
+  border-color: var(--accent-green-soft);
+  color: var(--ink);
+  opacity: 1;
+}
+
+.terminal-copy svg {
+  flex: 0 0 auto;
+}
+
+.terminal-block pre,
+.terminal-block pre.astro-code {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  color: var(--on-dark) !important;
+  margin: 0 !important;
+  overflow-x: visible !important;
+  overflow-wrap: anywhere !important;
+  white-space: pre-wrap !important;
+  word-break: break-word;
+}
+
+.terminal-block pre code {
+  background: transparent !important;
+  overflow-wrap: anywhere !important;
+  white-space: pre-wrap !important;
+  word-break: break-word;
+}
+
+.doc-article {
+  background: var(--surface-doc);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  padding: 1.5rem 2rem 2.5rem;
+}
+
+.doc-article-meta {
+  align-items: center;
+  border-bottom: 1px solid var(--hairline-soft);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin: 0.9rem 0 0;
+  padding-bottom: 1rem;
+}
+
+.doc-article-meta time,
+.doc-article-meta span {
+  color: var(--mute);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.doc-article-meta .dot {
+  color: var(--stone);
+}
+
+.doc-prev-next {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1.5rem;
+}
+
+.doc-prev-next a {
+  background: var(--surface-card);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  color: var(--body);
+  display: block;
+  padding: 0.9rem 1.1rem;
+  text-decoration: none;
+  transition:
+    background-color 180ms var(--motion),
+    border-color 180ms var(--motion),
+    transform 180ms var(--motion);
+}
+
+.doc-prev-next a:hover,
+.doc-prev-next a:focus-visible {
+  background: var(--surface-card);
+  border-color: var(--link-teal);
+  transform: translateY(-1px);
+}
+
+.doc-prev-next a[data-next="true"] {
+  text-align: right;
+}
+
+.doc-prev-next .pn-label {
+  color: var(--mute);
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.33;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.doc-prev-next .pn-title {
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .doc-prev-next {
+    grid-template-columns: 1fr;
+  }
+
+  .doc-article {
+    padding: 1.25rem 1.25rem 2rem;
+  }
 }
 
 @keyframes reveal-up {
@@ -1754,9 +2107,11 @@ main {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  flex-shrink: 0;
   gap: 1.5rem;
+  margin: 0;
+  max-width: none;
   padding: 4rem 1.5rem;
-  margin-top: 0;
   background-color: var(--primary);
   color: var(--ink);
   width: 100%;
@@ -1803,7 +2158,7 @@ main {
   gap: 0.75rem;
 }
 
-.footer-description {
+.site-footer .footer-description {
   margin: 0 !important;
   max-width: 400px;
   color: var(--ink);
@@ -1815,9 +2170,9 @@ main {
   font-size: 16px;
 }
 
-.footer-copy {
+.site-footer .footer-copy {
   margin: 0;
-  color: rgba(35, 37, 29, 0.7);
+  color: rgba(35, 37, 29, 0.75);
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.05em;

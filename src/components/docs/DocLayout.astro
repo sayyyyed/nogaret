@@ -1,0 +1,74 @@
+---
+interface Props {
+  hasToc?: boolean;
+}
+
+const { hasToc = false } = Astro.props;
+---
+
+<div class="doc-layout" data-has-toc={hasToc ? 'true' : 'false'}>
+  <aside class="doc-sidebar">
+    <slot name="sidebar" />
+  </aside>
+  <div class="doc-content">
+    <slot />
+  </div>
+  {hasToc && (
+    <aside class="doc-toc" aria-label="On this page">
+      <slot name="toc" />
+    </aside>
+  )}
+</div>
+
+<style>
+  .doc-layout {
+    align-items: flex-start;
+    display: grid;
+    gap: 2.5rem;
+    grid-template-columns: 240px minmax(0, 1fr);
+    padding: 3.5rem 0 5rem;
+    width: 100%;
+  }
+
+  .doc-sidebar {
+    position: sticky;
+    top: 80px;
+    max-height: calc(100dvh - 104px);
+    overflow-y: auto;
+  }
+
+  .doc-content {
+    min-width: 0;
+    max-width: 800px;
+  }
+
+  .doc-toc {
+    display: none;
+  }
+
+  @media (min-width: 1240px) {
+    .doc-layout[data-has-toc="true"] {
+      grid-template-columns: 240px minmax(0, 1fr) 200px;
+    }
+
+    .doc-toc {
+      display: block;
+      position: sticky;
+      top: 80px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .doc-layout {
+      gap: 1.5rem;
+      grid-template-columns: minmax(0, 1fr);
+      padding: 2.5rem 0 4rem;
+    }
+
+    .doc-sidebar {
+      max-height: none;
+      overflow: visible;
+      position: static;
+    }
+  }
+</style>

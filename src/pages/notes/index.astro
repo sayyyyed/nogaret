@@ -1,19 +1,172 @@
 ---
-import ContentCard from '../../components/content/ContentCard.astro';
-import SectionHero from '../../components/content/SectionHero.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import DocLayout from '../../components/docs/DocLayout.astro';
+import DocSidebar from '../../components/docs/DocSidebar.astro';
+import NoteCard from '../../components/docs/NoteCard.astro';
 import { getCollectionIfNotEmpty } from '../../lib/content/collections';
 import { collectionPath } from '../../lib/content/routes';
-import { isPublished, sortByDateDescending } from '../../lib/content/sort';
+import { isPublished } from '../../lib/content/sort';
+import {
+  noteDate,
+  noteDescription,
+  noteTitle,
+  noteType,
+  noteTypeLabel,
+  noteTypeOrder,
+  sortNotesByDateDescending,
+  type NoteType,
+} from '../../lib/content/notes';
 
-const entries = sortByDateDescending((await getCollectionIfNotEmpty('notes')).filter(isPublished));
+const entries = (await getCollectionIfNotEmpty('notes')).filter(isPublished);
+
+const dates = new Map<string, Date>();
+for (const entry of entries) {
+  dates.set(entry.id, await noteDate(entry));
+}
+
+const sorted = sortNotesByDateDescending(entries, dates);
+
+const byType = new Map<NoteType, typeof entries>();
+for (const entry of sorted) {
+  const type = noteType(entry);
+  const bucket = byType.get(type) ?? [];
+  bucket.push(entry);
+  byType.set(type, bucket);
+}
+
+const orderedTypes = [...byType.keys()].sort((left, right) => noteTypeOrder(left) - noteTypeOrder(right));
+
+const sidebarGroups = [
+  {
+    label: '',
+    items: [{ label: 'All notes', href: '/notes/#overview', count: sorted.length, active: true }],
+  },
+  {
+    label: 'Categories',
+    items: orderedTypes.map((type) => ({
+      label: noteTypeLabel(type),
+      href: `/notes/#${type}`,
+      count: byType.get(type)?.length ?? 0,
+    })),
+  },
+];
+
+function formatDate(date?: Date) {
+  if (!date) return undefined;
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
 ---
 
 <BaseLayout title="Notes" description="Digital garden notes, maps of content, and backlinks.">
-  <SectionHero title="Notes" description="Permanent notes, concepts, references, and maps of content for long-term knowledge growth." />
-  <section class="grid-list">
-    {entries.map((entry) => (
-      <ContentCard eyebrow={entry.data.noteType} title={entry.data.title} description={entry.data.description} href={collectionPath('notes', entry.id)} tags={entry.data.tags} />
-    ))}
-  </section>
+  <DocLayout>
+    <DocSidebar slot="sidebar" heading="Notes" groups={sidebarGroups} />
+    <section class="section-hero" id="overview">
+        <p class="eyebrow">Digital garden</p>
+        <h1>Notes</h1>
+        <p>Permanent notes, concepts, references, and maps of content for long-term knowledge growth. Drop a markdown file into <code>src/content/notes/</code> and the filename becomes its title.</p>
+      </section>
+
+      {orderedTypes.length === 0 && (
+        <section class="doc-article">
+          <p>No notes yet. Add a markdown file under <code>src/content/notes/</code> to publish your first note.</p>
+        </section>
+      )}
+
+      {orderedTypes.map((type) => {
+        const typeEntries = byType.get(type)!;
+        return (
+          <section class="notes-group" id={type}>
+            <div class="notes-group-head">
+              <p class="eyebrow">{noteTypeLabel(type)}</p>
+              <span class="notes-group-count">{typeEntries.length}</span>
+            </div>
+            <div class="notes-group-grid">
+              {typeEntries.map((entry) => (
+                <NoteCard
+                  type={noteType(entry)}
+                  title={noteTitle(entry)}
+                  description={noteDescription(entry)}
+                  href={collectionPath('notes', entry.id)}
+                  tags={entry.data.tags}
+                  date={formatDate(dates.get(entry.id))}
+                />
+              ))}
+            </div>
+          </section>
+        );
+      })}
+  </DocLayout>
 </BaseLayout>
+
+<style>
+  .section-hero {
+    animation: reveal-up 900ms var(--motion) both;
+    padding: 0 0 2.5rem;
+  }
+
+  .section-hero h1 {
+    font-size: clamp(1.9rem, 4.5vw, 3rem);
+    line-height: 1.12;
+    margin: 0;
+    max-width: 820px;
+  }
+
+  .section-hero p:not(.eyebrow) {
+    color: var(--body);
+    font-size: 15px;
+    line-height: 1.71;
+    margin: 1rem 0 0;
+    max-width: 72ch;
+    text-wrap: pretty;
+  }
+
+  .section-hero code {
+    background: var(--surface-soft);
+    border-radius: 2px;
+    color: var(--ink);
+    font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0.1rem 0.35rem;
+  }
+
+  .notes-group {
+    animation: reveal-up 900ms var(--motion) both;
+    margin-top: 2.5rem;
+    scroll-margin-top: 6rem;
+  }
+
+  .notes-group-head {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: space-between;
+  }
+
+  .notes-group-head .eyebrow {
+    margin-bottom: 0.5rem;
+  }
+
+  .notes-group-count {
+    background: var(--surface-card);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 999px;
+    color: var(--mute);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 3px 9px;
+  }
+
+  .notes-group-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 640px) {
+    .notes-group-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

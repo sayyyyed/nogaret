@@ -1,0 +1,32 @@
+---
+tags: [design, design-system, tailwind]
+connections:
+  - mocs/notes-writing-guide
+---
+
+The site's visual system lives in `src/styles/global.css` and follows the PostHog-inspired design analysis in `DESIGN.md`: a warm cream canvas, olive ink, and a single saturated yellow-orange accent.
+
+## Core tokens
+
+| Token | Value | Use |
+| --- | --- | --- |
+| `--canvas` | `#eeefe9` | Page background |
+| `--surface-card` | `#ffffff` | Cards and tiles |
+| `--surface-doc` | `#fcfcfa` | Doc article body |
+| `--surface-dark` | `#23251d` | Code blocks (inverted) |
+| `--primary` | `#f7a501` | Primary CTA |
+| `--ink` | `#23251d` | Headlines |
+| `--body` | `#4d4f46` | Body text |
+| `--link-teal` | `#1078a3` | Inline doc links |
+
+## Typography
+
+IBM Plex Sans Variable carries every text role across weights 400–800. Monospace (`Source Code Pro`) is reserved for code samples and inline chips.
+
+## Components
+
+The docs layer (`src/components/docs/`) implements the atomic model from `DESIGN.md`: atoms like `NoteBadge` and `Callout`, molecules like `NoteCard` and `DocSidebarItem`, and organisms like `DocLayout`, `DocSidebar`, `TocPanel`, and `BacklinksPanel`.
+
+<Callout type="tip" title="Reading the design">
+`DESIGN.md` at the repo root documents the full component anatomy, spacing scale, and interaction checklist.
+</Callout>

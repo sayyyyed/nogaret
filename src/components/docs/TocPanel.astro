@@ -1,0 +1,81 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+const items = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+---
+
+<nav class="toc" aria-label="On this page">
+  <p class="toc-heading">On this page</p>
+  {items.length > 0 ? (
+    <ol class="toc-list">
+      {items.map((heading) => (
+        <li data-depth={heading.depth}>
+          <a href={`#${heading.slug}`}>{heading.text}</a>
+        </li>
+      ))}
+    </ol>
+  ) : (
+    <p class="toc-empty">No sections</p>
+  )}
+</nav>
+
+<style>
+  .toc {
+    border-left: 1px solid var(--hairline-soft);
+    padding-left: 1rem;
+  }
+
+  .toc-heading {
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.33;
+    margin: 0 0 0.75rem;
+    text-transform: uppercase;
+  }
+
+  .toc-list {
+    display: grid;
+    gap: 2px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .toc-list li[data-depth="3"] {
+    padding-left: 0.75rem;
+  }
+
+  .toc-list a {
+    border-radius: 4px;
+    color: var(--mute);
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.5;
+    padding: 4px 8px;
+    text-decoration: none;
+    transition:
+      background-color 150ms var(--motion),
+      color 150ms var(--motion);
+  }
+
+  .toc-list a:hover,
+  .toc-list a:focus-visible {
+    background: var(--surface-soft);
+    color: var(--ink);
+  }
+
+  .toc-empty {
+    color: var(--ash);
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+  }
+</style>

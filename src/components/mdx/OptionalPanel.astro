@@ -1,0 +1,105 @@
+---
+interface Props {
+  title?: string;
+}
+
+const { title } = Astro.props;
+---
+
+<aside class="optional-panel">
+  <header class="optional-panel-head">
+    <span class="optional-panel-badge">
+      <svg viewBox="0 0 24 24" aria-hidden="true" width="13" height="13">
+        <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3" />
+        <path d="M8.5 12h7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+      </svg>
+      Opsional
+    </span>
+    {title && <span class="optional-panel-title">{title}</span>}
+  </header>
+  <div class="optional-panel-body">
+    <slot />
+  </div>
+  <p class="optional-panel-note">Boleh dilewati — bukan bagian wajib.</p>
+</aside>
+
+<style>
+  .optional-panel {
+    background: var(--surface-doc);
+    border: 1.5px dashed var(--hairline);
+    border-radius: 6px;
+    margin: 1.5rem 0;
+    padding: 1rem 1.25rem;
+  }
+
+  .optional-panel-head {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .optional-panel-badge {
+    align-items: center;
+    background: var(--surface-soft);
+    border-radius: 999px;
+    color: var(--mute);
+    display: inline-flex;
+    font-size: 11px;
+    font-weight: 700;
+    gap: 0.35rem;
+    letter-spacing: 0.06em;
+    line-height: 1.33;
+    padding: 3px 10px;
+    text-transform: uppercase;
+  }
+
+  .optional-panel-title {
+    color: var(--charcoal);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .optional-panel-body {
+    color: var(--body);
+    font-size: 14px;
+    line-height: 1.71;
+  }
+
+  .optional-panel-body :global(p) {
+    margin: 0;
+  }
+
+  .optional-panel-body :global(p + p) {
+    margin-top: 0.6rem;
+  }
+
+  .optional-panel-body :global(ul) {
+    margin: 0.5rem 0 0;
+    padding-left: 1.25rem;
+  }
+
+  .optional-panel-body :global(li) {
+    margin-bottom: 0.25rem;
+  }
+
+  .optional-panel-body :global(code) {
+    background: var(--surface-soft);
+    border-radius: 2px;
+    color: var(--ink);
+    font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0.1rem 0.35rem;
+  }
+
+  .optional-panel-note {
+    color: var(--ash);
+    font-size: 12px;
+    font-style: italic;
+    line-height: 1.5;
+    margin: 0.75rem 0 0;
+  }
+</style>

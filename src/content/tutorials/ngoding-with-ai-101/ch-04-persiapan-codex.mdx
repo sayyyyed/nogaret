@@ -1,0 +1,190 @@
+---
+title: Persiapan Koding
+description: Siapkan folder proyek, tulis app.md dan DESIGN.md, sambungkan GitHub ke VS Code, lalu inisialisasi repo — bekal lengkap sebelum minta Codex ngoding.
+date: 2026-09-04
+difficulty: beginner
+series: Ngoding with AI 101
+order: 4
+prerequisites:
+  - Setup Tools
+  - Buat Akun
+  - Kenalan VS Code & CMD
+outcomes:
+  - Membuat dan membuka folder proyek dari CMD
+  - Menulis spec aplikasi di app.md dan menaruh DESIGN.md
+  - Menyambungkan akun GitHub ke VS Code
+  - Inisialisasi Git, commit, dan push pertama ke GitHub
+tags: [codex, spec, design, setup, git, github]
+---
+
+Di tiga bab sebelumnya kamu sudah menyiapkan tool, akun, dan kenalan dengan VS Code & CMD. Bab ini menyiapkan **dua berkas bekal** yang akan dibaca AI di bab selanjutnya: `app.md` (cerita aplikasinya mau jadi apa) dan `DESIGN.md` (gaya tampilannya).
+
+<Callout type="info" title="Dua berkas itu kuncinya">
+Codex membaca instruksi dari berkas `.md` di folder proyek. `app.md` menjelaskan *fungsi*, `DESIGN.md` menjelaskan *tampilan*. Dengan keduanya, AI bisa menghasilkan kode yang sesuai tanpa kamu tulis manual dari nol.
+</Callout>
+
+## 1. Buat folder proyek
+
+Buka CMD dengan **<WinKey /> + R**, ketik `cmd`, lalu **Enter**.
+
+<Callout type="info" title="Nama folder bebas">
+Kamu bisa menamai folder dengan nama apa pun — `ngoding-ai-101` di bawah ini cuma contoh. Ganti dengan nama proyekmu sendiri, misalnya `catatan-harian` atau `todo-app`, dan sesuaikan perintah `cd`-nya.
+</Callout>
+
+```cmd
+mkdir ngoding-ai-101
+cd ngoding-ai-101
+dir
+```
+
+Perintah `mkdir` membuat folder baru, `cd` masuk ke dalamnya, dan `dir` memastikan foldernya ada (seharusnya kosong).
+
+## 2. Buka folder di VS Code
+
+Masih di CMD yang sama (pastikan kamu sudah di dalam `ngoding-ai-101`):
+
+```cmd
+code .
+```
+
+<Callout type="success" title="VS Code terbuka">
+Jendela VS Code muncul dan menampilkan folder `ngoding-ai-101` di panel Explorer. Titik (`.`) artinya "folder saat ini".
+</Callout>
+
+Biarkan VS Code tetap terbuka — kita akan membuat berkas di dalamnya.
+
+## 3. Tulis spec aplikasi di app.md
+
+Di VS Code, buat file baru bernama **`app.md`** di **root project** (sejajar folder, bukan di dalam subfolder).
+
+Isinya cukup 1 paragraf pembuka + 3 bullet fitur utama. Contoh untuk aplikasi catatan sederhana:
+
+```md
+# Aplikasi Catatan Harian
+
+Aplikasi web sederhana untuk mencatat ide harian dengan cepat.
+
+- Tambah, edit, dan hapus catatan
+- Tandai catatan sebagai selesai
+- Cari catatan berdasarkan kata kunci
+```
+
+<Callout type="tip" title="Tulis punyamu sendiri">
+Ganti contoh di atas dengan ide aplikasimu. Tetap singkat: 1 paragraf + 3 fitur. Semakin jelas spec-nya, semakin tepat kode yang dihasilkan AI.
+</Callout>
+
+Simpan file (**Ctrl + S**).
+
+## 4. Cari DESIGN.md
+
+Buka [designprompts.dev](https://www.designprompts.dev/) — katalog template desain siap pakai. Pilih satu yang paling dekat dengan gaya aplikasi yang kamu mau (misalnya *colorful*, *profesional*, atau *lucu*).
+
+<Callout type="info" title="Kenapa DESIGN.md?">
+`DESIGN.md` berisi sistem desain: palet warna, tipografi, dan komponen. Mirip seperti `app.md` untuk tampilan — AI membacanya agar hasil kode tidak asal jadi.
+</Callout>
+
+Unduh berkas `DESIGN.md` dari template yang kamu pilih.
+
+## 5. Taruh DESIGN.md di root project
+
+Pindahkan `DESIGN.md` yang baru diunduh ke **root project** — sejajar dengan `app.md`:
+
+```
+ngoding-ai-101/
+├── app.md
+└── DESIGN.md
+```
+
+Cek lewat CMD:
+
+```cmd
+dir
+```
+
+Kamu harus melihat kedua berkas tersebut.
+
+<OptionalPanel title="Sudah punya DESIGN.md sendiri?">
+Kalau kamu sudah punya gaya sendiri, kamu juga boleh menulis `DESIGN.md` manual — cukup sebutkan 3 warna utama, 1 font, dan bentuk tombol/kartu yang kamu mau. Untuk pemula, pakai template dari designprompts.dev lebih cepat.
+</OptionalPanel>
+
+## 6. Sambungkan GitHub ke VS Code
+
+Agar VS Code bisa push tanpa mengetik password setiap kali, hubungkan dulu akun GitHub kamu — semuanya lewat GUI.
+
+1. Di VS Code, klik ikon **Accounts** (pojok kiri bawah, foto profil) → pilih **Sign in with GitHub**.
+2. Browser terbuka → klik **Authorize Visual-Studio-Code** → kembali ke VS Code, akun GitHub kamu sudah terhubung.
+
+<Callout type="tip" title="Cek akun terhubung">
+Buka **Command Palette** (<WinKey /> + Shift + P di dalam VS Code), ketik `GitHub: Sign in` — jika sudah login, status akunmu akan tampil.
+</Callout>
+
+<Callout type="info" title="Nama & email Git">
+Saat commit pertama nanti, VS Code mungkin meminta nama dan email. Isi dengan nama & email GitHub kamu — ini hanya sekali.
+</Callout>
+
+## 7. Inisialisasi Project ke GitHub
+
+Sekarang jadikan folder `ngoding-ai-101` sebagai repository Git langsung dari VS Code — tanpa terminal.
+
+1. Di VS Code, buka tab **Source Control** (ikon cabang, atau **Ctrl + Shift + G**).
+2. Klik tombol **Initialize Repository** — folder kamu sekarang jadi repository Git lokal. Kamu akan melihat `app.md` dan `DESIGN.md` muncul sebagai *Untracked Changes*.
+3. Arahkan kursor ke daftar file → klik ikon **+ (Stage All Changes)** di samping judul *Changes* untuk menyiapkan kedua berkas.
+4. Ketik pesan commit di kotak atas: `Inisialisasi proyek: app.md + DESIGN.md` → klik tombol **Commit** (ikon centang). Jika diminta nama/email, isi lalu klik Commit lagi.
+
+<Callout type="tip" title="Tanpa satu baris terminal">
+Semua langkah di atas pakai klik di panel Source Control — tidak perlu mengetik `git init` atau `git add` di CMD.
+</Callout>
+
+Lalu buat repository kosong di GitHub:
+
+1. Buka [github.com/new](https://github.com/new) → isi **Repository name**: `ngoding-ai-101` → biarkan kosong (jangan centang *Add README*) → klik **Create repository**.
+
+## 8. Push Pertama Lewat VS Code
+
+Hubungkan repository lokal ke GitHub dan kirim commit pertama — tetap lewat GUI:
+
+1. Kembali ke tab **Source Control** di VS Code → klik tombol **Publish to GitHub** (muncul setelah commit pertama).
+2. Pilih visibilitas **Private** atau **Public** → klik **OK** saat VS Code meminta izin.
+3. Jika ada jendela *Authorize* muncul lagi, klik **Allow**.
+
+Setelah sukses, buka halaman repo di `github.com/username/ngoding-ai-101` — kamu akan melihat `app.md` dan `DESIGN.md` sudah ada di sana.
+
+<Callout type="info" title="Cek status kapan saja">
+Di tab Source Control kamu bisa melihat file yang berubah, riwayat commit, dan tombol **Sync Changes** untuk push/pull selanjutnya.
+</Callout>
+
+<Callout type="success" title="Repo hidup">
+Setiap perubahan selanjutnya cukup: **Stage** → tulis pesan commit → **Commit** → **Push** (atau **Sync Changes**) dari panel Source Control. Pola ini akan kamu pakai di setiap bab.
+</Callout>
+
+## 9. Coba prompt pertama ke Codex
+
+Bekal sudah lengkap **dan sudah tersimpan aman di GitHub**. Di terminal VS Code (Ctrl + \`), coba prompt ini:
+
+```text
+Buatkan aplikasi berdasarkan app.md dan DESIGN.md
+```
+
+Codex akan membaca kedua berkas dan mulai menghasilkan kode. Jangan khawatir kalau hasilnya belum sempurna — di bab selanjutnya kita akan instal Next.js dan belajar cara memperbaiki prompt langkah demi langkah.
+
+## 10. Buka Hasil di Browser
+
+Setelah Codex selesai, buka hasilnya untuk melihat apakah sudah sesuai `app.md` dan `DESIGN.md`. Di bab ini hasilnya masih file biasa — cukup buka `index.html` langsung di browser, belum perlu `localhost`.
+
+1. Lihat panel **Explorer** di VS Code — file baru akan muncul, biasanya `index.html` (kadang bersama `style.css`).
+2. Klik kanan file `index.html` di Explorer → pilih **Open with Live Server**.
+   - Butuh ekstensi **Live Server** (install sekali: tab Extensions → cari *Live Server* → Install).
+   - Browser otomatis terbuka di `http://127.0.0.1:5500`.
+3. Alternatif tanpa ekstensi: klik kanan `index.html` → **Copy Path** → tempel di address bar browser (alamatnya `file:///...`), atau cukup **double-klik** file `index.html` di File Explorer Windows untuk membukanya.
+
+<Callout type="tip" title="Tidak muncul?">
+Cek tab **Explorer** — pastikan `index.html` ada. Jika browser menampilkan halaman putih, lihat tab **Problems** di VS Code atau minta Codex: `Perbaiki error di index.html`.
+</Callout>
+
+<Callout type="success" title="Bekal siap">
+Folder berisi `app.md` + `DESIGN.md`, sudah ter-push ke GitHub, dan hasilnya bisa kamu buka langsung sebagai file HTML — Codex sudah bisa mulai ngoding. Lanjutkan ke bab berikutnya untuk instalasi Next.js.
+</Callout>
+
+## Kembali ke bab sebelumnya
+
+[← Kembali ke Bab 3 · Kenalan VS Code & CMD](/tutorials/ngoding-with-ai-101/ch-03-vscode-and-cmd/)

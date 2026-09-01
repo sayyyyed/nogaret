@@ -1,0 +1,226 @@
+---
+import BrandIcon from './BrandIcon.astro';
+import WinKey from './WinKey.astro';
+
+interface Props {
+  icon: 'vscode' | 'git' | 'node' | 'github' | 'openai' | 'codex';
+  name: string;
+  url: string;
+  hint?: string;
+  badge?: string;
+}
+
+const { icon, name, url, hint, badge } = Astro.props;
+---
+
+<article class="tool-card">
+  <div class="tool-card-head">
+    <span class="tool-card-icon">
+      <BrandIcon name={icon} size={26} />
+    </span>
+    <div class="tool-card-title">
+      {badge && <span class="tool-card-badge">{badge}</span>}
+      <h3>{name}</h3>
+    </div>
+  </div>
+  <div class="tool-card-body">
+    <slot />
+  </div>
+  {hint && (
+    <div class="tool-card-hint">
+      <div class="tool-card-hint-row">
+        <span class="tool-card-hint-label">Cek instalasi</span>
+        <code class="tool-card-hint-code">{hint}</code>
+      </div>
+      <p class="tool-card-hint-open">
+        Buka CMD:
+        <span class="tool-card-hint-keys">
+          <WinKey size={13} compact /> + R
+        </span>
+        → ketik <code>cmd</code> lalu Enter
+      </p>
+    </div>
+  )}
+  <a class="tool-card-link" href={url} target="_blank" rel="noopener noreferrer">
+    Kunjungi situs resmi
+    <svg viewBox="0 0 16 16" aria-hidden="true" width="13" height="13">
+      <path d="M6 3h7v7M13 3 5 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </a>
+</article>
+
+<style>
+  .tool-card {
+    background: var(--surface-card);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+  }
+
+  .tool-card-head {
+    align-items: center;
+    display: flex;
+    gap: 0.85rem;
+  }
+
+  .tool-card-icon {
+    align-items: center;
+    background: var(--surface-soft);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 6px;
+    display: inline-flex;
+    flex: 0 0 auto;
+    height: 44px;
+    justify-content: center;
+    width: 44px;
+  }
+
+  .tool-card-title {
+    min-width: 0;
+  }
+
+  .tool-card-badge {
+    color: var(--mute);
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.33;
+    margin-bottom: 0.15rem;
+    text-transform: uppercase;
+  }
+
+  .tool-card-title h3 {
+    color: var(--ink);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .tool-card-body {
+    color: var(--body);
+    font-size: 15px;
+    line-height: 1.71;
+    margin-top: 0.85rem;
+  }
+
+  .tool-card-body :global(p) {
+    margin: 0;
+  }
+
+  .tool-card-body :global(p + p) {
+    margin-top: 0.6rem;
+  }
+
+  .tool-card-body :global(code) {
+    background: var(--surface-soft);
+    border-radius: 2px;
+    color: var(--ink);
+    font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 0.1rem 0.35rem;
+  }
+
+  .tool-card-hint {
+    background: var(--surface-doc);
+    border: 1px solid var(--hairline-soft);
+    border-radius: 6px;
+    margin: 1rem 0 0;
+    overflow: hidden;
+  }
+
+  .tool-card-hint-row {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.6rem 0.85rem;
+  }
+
+  .tool-card-hint-label {
+    color: var(--mute);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.33;
+    text-transform: uppercase;
+  }
+
+  .tool-card-hint-code {
+    background: var(--surface-dark);
+    border-radius: 4px;
+    color: var(--on-dark);
+    font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.43;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .tool-card-hint-open {
+    align-items: center;
+    border-top: 1px solid var(--hairline-soft);
+    color: var(--body);
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 13px;
+    gap: 0.35rem;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0.55rem 0.85rem;
+  }
+
+  .tool-card-hint-keys {
+    align-items: center;
+    display: inline-flex;
+    font-weight: 600;
+    gap: 0.3rem;
+    color: var(--ink);
+  }
+
+  .tool-card-hint-open code {
+    background: var(--surface-soft);
+    border-radius: 2px;
+    color: var(--ink);
+    font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0.1rem 0.35rem;
+  }
+
+  .tool-card-link {
+    align-items: center;
+    background: var(--surface-card);
+    border: 1px solid var(--primary-active);
+    border-radius: 6px;
+    color: var(--ink);
+    display: inline-flex;
+    font-size: 14px;
+    font-weight: 700;
+    gap: 0.45rem;
+    height: 36px;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 0 1rem;
+    text-decoration: none;
+    transition:
+      background-color 150ms var(--motion),
+      border-color 150ms var(--motion),
+      color 150ms var(--motion),
+      transform 150ms var(--motion);
+  }
+
+  .tool-card-link:hover,
+  .tool-card-link:focus-visible {
+    background: var(--primary);
+    border-color: var(--primary-active);
+    transform: translateY(-1px);
+  }
+
+  .tool-card-link:active {
+    transform: translateY(1px);
+  }
+</style>

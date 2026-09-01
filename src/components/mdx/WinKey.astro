@@ -1,0 +1,28 @@
+---
+interface Props {
+  size?: number;
+  compact?: boolean;
+}
+
+const { size = 15, compact = false } = Astro.props;
+const keyHeight = compact ? 20 : 24;
+---
+
+<span class="win-key" role="img" aria-label="Windows key" style={`height:${keyHeight}px;padding:0 ${compact ? '4px' : '5px'}`}>
+  <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M3 5.457 10.352 4.5v7.443H3V5.457zM11.352 4.407 21 3v8.943h-9.648V4.407zM3 12.557h7.352v7.443L3 18.542v-5.985zM11.352 12.557H21V21l-9.648-1.5v-6.943z" fill="#0078d4" />
+  </svg>
+</span>
+
+<style>
+  .win-key {
+    align-items: center;
+    background: var(--surface-card);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+    box-shadow: 0 1px 0 var(--hairline);
+    display: inline-flex;
+    justify-content: center;
+    vertical-align: -5px;
+  }
+</style>

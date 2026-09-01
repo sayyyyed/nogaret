@@ -1,0 +1,23 @@
+---
+import { noteTypeLabel, type NoteType } from '../../lib/content/notes';
+
+interface Props {
+  type: NoteType;
+}
+
+const { type } = Astro.props;
+---
+
+<span class="note-badge">{noteTypeLabel(type)}</span>
+
+<style>
+  .note-badge {
+    color: var(--mute);
+    display: inline-flex;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.33;
+    text-transform: uppercase;
+  }
+</style>

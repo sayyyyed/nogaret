@@ -157,5 +157,50 @@ const pageTitle = title === site.name ? site.name : `${title} | ${site.name}`;
         });
       }
     </script>
+    <script>
+      (function () {
+        function enhanceTerminalBlocks() {
+          document.querySelectorAll('pre').forEach(function (pre) {
+            if (pre.closest('.terminal-block')) return;
+            if (!pre.querySelector('code')) return;
+            var wrapper = document.createElement('div');
+            wrapper.className = 'terminal-block';
+            var header = document.createElement('div');
+            header.className = 'terminal-header';
+            header.innerHTML =
+              '<span>terminal</span>' +
+              '<button class="terminal-copy" type="button" aria-label="Copy code"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v3"></path></svg><span class="copy-label">Copy</span></button>';
+            pre.parentNode.insertBefore(wrapper, pre);
+            wrapper.appendChild(pre);
+            wrapper.insertBefore(header, pre);
+            var btn = header.querySelector('.terminal-copy');
+            var label = header.querySelector('.copy-label');
+            var codeEl = pre.querySelector('code');
+            btn.addEventListener('click', function () {
+              var text = codeEl ? codeEl.innerText : pre.innerText;
+              navigator.clipboard
+                .writeText(text)
+                .then(function () {
+                  label.textContent = 'Copied';
+                  btn.classList.add('copied');
+                  btn.innerHTML =
+                    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"></path></svg><span class="copy-label">Copied</span>';
+                  setTimeout(function () {
+                    btn.classList.remove('copied');
+                    btn.innerHTML =
+                      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v3"></path></svg><span class="copy-label">Copy</span>';
+                  }, 1800);
+                })
+                .catch(function () {});
+            });
+          });
+        }
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', enhanceTerminalBlocks);
+        } else {
+          enhanceTerminalBlocks();
+        }
+      })();
+    </script>
   </body>
 </html>

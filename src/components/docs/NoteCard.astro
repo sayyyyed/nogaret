@@ -1,0 +1,100 @@
+---
+import NoteBadge from './NoteBadge.astro';
+import type { NoteType } from '../../lib/content/notes';
+
+interface Props {
+  eyebrow?: string;
+  type?: NoteType;
+  title: string;
+  description: string;
+  href: string;
+  tags?: string[];
+  date?: string;
+}
+
+const { eyebrow, type, title, description, href, tags = [], date } = Astro.props;
+---
+
+<article class="note-card">
+  <div class="note-card-meta">
+    {type ? <NoteBadge type={type} /> : eyebrow ? <span class="note-card-eyebrow">{eyebrow}</span> : null}
+    {date && <time datetime={date}>{date}</time>}
+  </div>
+  <h3><a href={href}>{title}</a></h3>
+  {description && <p class="note-card-description">{description}</p>}
+  {tags.length > 0 && (
+    <ul class="tag-list" aria-label="Tags">
+      {tags.map((tag) => <li>{tag}</li>)}
+    </ul>
+  )}
+</article>
+
+<style>
+  .note-card {
+    background: var(--surface-doc);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    color: var(--body);
+    padding: 1.25rem 1.5rem;
+    transition:
+      background-color 180ms var(--motion),
+      border-color 180ms var(--motion),
+      transform 180ms var(--motion);
+  }
+
+  .note-card:hover {
+    background: var(--surface-card);
+    border-color: var(--hairline);
+    transform: translateY(-2px);
+  }
+
+  .note-card-meta {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .note-card-meta time {
+    color: var(--mute);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.43;
+  }
+
+  .note-card-eyebrow {
+    color: var(--mute);
+    display: inline-flex;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    line-height: 1.33;
+    text-transform: uppercase;
+  }
+
+  .note-card h3 {
+    color: var(--ink);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .note-card h3 a {
+    text-decoration: none;
+  }
+
+  .note-card-description {
+    color: var(--body);
+    font-size: 14px;
+    line-height: 1.71;
+    margin: 0.6rem 0 0;
+    overflow-wrap: anywhere;
+  }
+
+  .note-card :global(.tag-list) {
+    margin-top: 0.85rem;
+  }
+</style>
