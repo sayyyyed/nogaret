@@ -1,12 +1,13 @@
 ---
 import '../../styles/global.css';
 import AdminDashboard from '../../components/AdminDashboard';
+import { env } from 'cloudflare:workers';
 
 // Token stored as char codes — not a plain searchable string
 // "siahokdurjana" → [115,105,97,104,111,107,100,117,114,106,97,110,97]
 const tokenCodes = [115, 105, 97, 104, 111, 107, 100, 117, 114, 106, 97, 110, 97];
-const supabaseUrl = import.meta.env.SUPABASE_URL;
-const supabaseKey = import.meta.env.SUPABASE_KEY;
+const supabaseUrl = env.SUPABASE_URL;
+const supabaseKey = env.SUPABASE_KEY;
 ---
 
 <!doctype html>
