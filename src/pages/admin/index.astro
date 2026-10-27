@@ -5,6 +5,8 @@ import AdminDashboard from '../../components/AdminDashboard';
 // Token stored as char codes — not a plain searchable string
 // "siahokdurjana" → [115,105,97,104,111,107,100,117,114,106,97,110,97]
 const tokenCodes = [115, 105, 97, 104, 111, 107, 100, 117, 114, 106, 97, 110, 97];
+const supabaseUrl = import.meta.env.SUPABASE_URL;
+const supabaseKey = import.meta.env.SUPABASE_KEY;
 ---
 
 <!doctype html>
@@ -100,7 +102,7 @@ const tokenCodes = [115, 105, 97, 104, 111, 107, 100, 117, 114, 106, 97, 110, 97
 
       <!-- Dashboard View (React Component) -->
       <div id="admin-app" style="display:none" class="h-full w-full absolute inset-0 z-10">
-        <AdminDashboard client:only="react" />
+        <AdminDashboard client:only="react" supabaseUrl={supabaseUrl} supabaseKey={supabaseKey} />
       </div>
     </div>
 

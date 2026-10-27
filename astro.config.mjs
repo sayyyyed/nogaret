@@ -44,8 +44,20 @@ const noteMtimes = computeFileMtimes('src/content/notes', 'src/content/notes/');
 
 // https://astro.build/config
 export default defineConfig({
+  output: 'server',
+
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: [
+        'react',
+        'react-dom',
+        'react/jsx-dev-runtime',
+        'react/jsx-runtime',
+        'react-dom/server',
+        'react-dom/server.edge'
+      ]
+    },
     define: {
       'import.meta.env.NOTE_MTIMES': JSON.stringify(noteMtimes)
     }

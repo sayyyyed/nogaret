@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { adminStore, type Project, type NormalProject, type DesignProject } from '../lib/adminStore';
 import AdminEditor from './AdminEditor';
 import DesignBuilder from './DesignBuilder';
+import BlogManager from './BlogManager';
+import { configureSupabaseBrowserClient } from '../lib/supabase';
 
 // ── UI Components ──
 
@@ -52,7 +54,13 @@ function ConfirmModal({ isOpen, title, message, onConfirm, onCancel, confirmText
 
 // ── Main Dashboard ──
 
-export default function AdminDashboard() {
+interface AdminDashboardProps {
+  supabaseUrl?: string;
+  supabaseKey?: string;
+}
+
+export default function AdminDashboard({ supabaseUrl, supabaseKey }: AdminDashboardProps) {
+  configureSupabaseBrowserClient(supabaseUrl, supabaseKey);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'blog' | 'notes' | 'research'>('projects');
   const [projects, setProjects] = useState<Project[]>([]);
   const [view, setView] = useState<'list' | 'type-select' | 'form'>('list');
@@ -217,7 +225,9 @@ export default function AdminDashboard() {
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto p-4 md:p-6">
-          {activeTab === 'projects' ? (
+          {activeTab === 'blog' ? (
+            <BlogManager />
+          ) : activeTab === 'projects' ? (
             
             // ── LIST VIEW ──
             view === 'list' ? (
